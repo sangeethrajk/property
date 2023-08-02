@@ -1,0 +1,25 @@
+.main-content {
+    padding: 2rem;
+}
+
+.sub-heading {
+    font-size: 1.5rem;
+    font-weight: bold;
+    grid-column: 1/3;
+}
+
+.create-new-scheme {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 3rem;
+}
+
+.button-row {
+    grid-column: 1/3;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.button-row button {
+    margin: 0rem 0.5rem;
+}
