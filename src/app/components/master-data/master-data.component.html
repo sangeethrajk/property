@@ -1,0 +1,158 @@
+<section class="main-content">
+    <div class="header-row">
+        <h3 class="sub-heading">Master Data</h3>
+        <button mat-button><mat-icon>download</mat-icon>Export to Excel</button>
+    </div>
+    <div class="filter-row mb-4">
+        <div>
+            <label for="search-input" class="label">Filter</label><br>
+            <div class="search-container">
+                <div>
+                    <input matInput #input type="text" id="search-input" class="search-input" placeholder="Search...">
+                    <div class="search-icon">
+                        <mat-icon>search</mat-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="add-dataBtn">
+            <button mat-raised-button><mat-icon>add</mat-icon>Add New Unit Data</button>
+        </div>
+    </div>
+
+    <div>
+        <mat-tab-group>
+            <mat-tab label="Unit Data">
+                <ng-template matTabContent>
+                    <table mat-table [dataSource]="unitDataSource" matSort class="schemes-table">
+
+                        <!-- S.No Column -->
+                        <ng-container matColumnDef="N_ID">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> S.No. </th>
+                            <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+                        </ng-container>
+
+                        <!-- Date Column -->
+                        <ng-container matColumnDef="V_TYPE_NAME">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                            <td mat-cell *matCellDef="let row"> {{row.progress}}% </td>
+                        </ng-container>
+
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="V_UNIT_ID">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                            <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+                        </ng-container>
+
+                        <!-- Division Column -->
+                        <ng-container matColumnDef="V_UNIT_NO">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Division </th>
+                            <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                        </ng-container>
+
+                        <!-- Scheme Type Column -->
+                        <ng-container matColumnDef="V_BLOCK_NO">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Scheme Type </th>
+                            <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                        </ng-container>
+
+                        <!-- Asset Category Column -->
+                        <ng-container matColumnDef="V_FLOOR_NO">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Asset Category </th>
+                            <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                        </ng-container>
+
+                        <!-- Asset Sub Category Column -->
+                        <ng-container matColumnDef="V_PLINTH_AREA">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Asset Sub Category </th>
+                            <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                        </ng-container>
+
+                        <!-- Asset Type Column -->
+                        <ng-container matColumnDef="V_UDS_AREA">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Asset Type </th>
+                            <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                        </ng-container>
+
+                        <!-- Action Column -->
+                        <ng-container matColumnDef="V_PLOT_AREA">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+                            <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                        </ng-container>
+
+                        <!-- Master Data Column -->
+                        <ng-container matColumnDef="V_CARPET_AREA">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Master Data</th>
+                            <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                        </ng-container>
+
+                        <!-- Master Data Column -->
+                        <ng-container matColumnDef="V_ROAD_FACING">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Master Data</th>
+                            <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                        </ng-container>
+
+                        <!-- Master Data Column -->
+                        <ng-container matColumnDef="V_CORNER_PLOT_STATUS">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Master Data</th>
+                            <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                        </ng-container>
+
+                        <!-- Master Data Column -->
+                        <ng-container matColumnDef="V_GOVT_DISCRETION_QUOTA">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Master Data</th>
+                            <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                        </ng-container>
+
+                        <!-- Master Data Column -->
+                        <ng-container matColumnDef="V_UNIT_ALLOTTED_STATUS">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Master Data</th>
+                            <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                        </ng-container>
+
+                        <!-- Master Data Column -->
+                        <ng-container matColumnDef="V_ALLOTMENT_TYPE">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Master Data</th>
+                            <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                        </ng-container>
+
+                        <!-- Master Data Column -->
+                        <ng-container matColumnDef="V_CATEGORY">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Master Data</th>
+                            <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                        </ng-container>
+
+                        <!-- Master Data Column -->
+                        <ng-container matColumnDef="ACTION">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Master Data</th>
+                            <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="unitTableColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: unitTableColumns;"></tr>
+
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                        </tr>
+                    </table>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Allotee">
+                <ng-template matTabContent>
+                    Content 2
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Financial">
+                <ng-template matTabContent>
+                    Content 3
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Sale Deed">
+                <ng-template matTabContent>
+                    Content 3
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</section>

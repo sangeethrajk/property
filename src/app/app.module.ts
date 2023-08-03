@@ -13,7 +13,6 @@ import { NgxUiLoaderConfig, NgxUiLoaderModule, SPINNER, NgxUiLoaderRouterModule 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MasterDataComponent } from './components/master-data/master-data.component';
 import { LoginComponent } from './pages/login/login.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
@@ -29,8 +28,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 @NgModule({
   declarations: [
     AppComponent,
-    MasterDataComponent,
-    LoginComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

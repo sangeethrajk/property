@@ -1,119 +1,357 @@
-<section class="main-content">
-    <form action="" method="post" class="create-new-scheme">
-        <h3 class="sub-heading">Scheme Data</h3>
-        <mat-form-field>
-            <mat-label>Scheme Code</mat-label>
-            <input matInput type="text" name="scheme_code">
-        </mat-form-field>
-        <!-- <mat-form-field>
-        <mat-label for="typeNameSelect">Type Name</mat-label>
-        <select id="typeNameSelect" onchange="changeTypeName()" required></select>
-    </mat-form-field> -->
-        <mat-form-field>
-            <mat-label>Scheme Name</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <!-- <mat-form-field>
-        <mat-label>Unit Type</mat-label>
-        <select name=""></select>
-    </mat-form-field> -->
-        <mat-form-field>
-            <mat-label>Cut off Date</mat-label>
-            <input matInput type="date" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Final Cut off Date</mat-label>
-            <input matInput type="date" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Rate of Scheme Interest</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Repayment Period</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Selling Price</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Selling Extent</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Tentative Land Cost</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Final Land Cost</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Profit on Land</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Rate Adopted</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <h3 class="sub-heading">Unit Data</h3>
-        <mat-form-field>
-            <mat-label>Total Developed Units</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Total Allotted Units</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Total Developed Units for Outright</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Total allotted units for Hire purchase</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Total Arrears EMI</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Total Balance EMI</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Total Current EMI</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Total Number of Sale Deed issued</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Total Number of Live cases for Hire</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Total Number of paid Cases(Sale Deed not yet issued)</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Total Ripped unit</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Total Unsold Units</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Remarks</mat-label>
-            <input matInput type="text" name="" id="">
-        </mat-form-field>
-        <!-- Button -->
-        <div class="button-row">
-            <button mat-raised-button type="reset">Reset</button>
-            <button mat-raised-button type="submit" style="background-color: #470A3C;color: #ffffff;">Submit</button>
-        </div>
-    </form>
+<section *ngIf="modeService.createScheme" class="main-content">
+    <h2 class="heading">Create Scheme</h2>
+
+    <mat-horizontal-stepper [linear]="isLinear" #stepper="matHorizontalStepper">
+        <mat-step [stepControl]="schemeFormGroup">
+            <form [formGroup]="schemeFormGroup" class="scheme-data-form">
+                <ng-template matStepLabel>Scheme Data</ng-template>
+
+                <mat-form-field>
+                    <mat-label>Scheme Code:</mat-label>
+                    <input matInput type="text" name="scheme_code" formControlName="v_SCHEME_CODE" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Type Name:</mat-label>
+                    <mat-select formControlName="v_TYPE_NAME">
+                        <mat-option value="Type-1">Type-1</mat-option>
+                        <mat-option value="Type-2">Type-2</mat-option>
+                        <mat-option value="Type-3">Type-3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Scheme Name:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="v_SCHEME_NAME" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Unit Type:</mat-label>
+                    <mat-select formControlName="v_UNIT_TYPE">
+                        <mat-option value="Type-1">Unit Type-1</mat-option>
+                        <mat-option value="Type-2">Unit Type-2</mat-option>
+                        <mat-option value="Type-3">Unit Type-3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Cut off Date:</mat-label>
+                    <input matInput [matDatepicker]="cutOffDate" formControlName="v_CUT_OFF_DATE" required>
+                    <mat-datepicker-toggle matIconSuffix [for]="cutOffDate"></mat-datepicker-toggle>
+                    <mat-datepicker #cutOffDate color="primary"></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Final Cut off Date:</mat-label>
+                    <input matInput [matDatepicker]="finalCutOffDate" formControlName="d_FINAL_CUTOFF_DATE" required>
+                    <mat-datepicker-toggle matIconSuffix [for]="finalCutOffDate"></mat-datepicker-toggle>
+                    <mat-datepicker #finalCutOffDate color="primary"></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Rate of Scheme Interest:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_RATE_OF_SCHEME_INTEREST" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Repayment Period:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="v_REPAYMENT_METHOD" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Selling Price:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_SELLING_PRICE" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Selling Extent:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="v_SELLING_EXTENT" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Tentative Land Cost:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TENTATIVE_LAND_COST" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Final Land Cost:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_FINAL_LAND_COST" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Profit on Land:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_PROFIT_ON_LAND" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Rate Adopted:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_RATE_ADOPTED" required>
+                </mat-form-field>
+                <div class="button">
+                    <button matStepperNext class="btn" style="background-color: #470A3C;color: white;">Next</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step [stepControl]="unitFormGroup">
+            <form [formGroup]="unitFormGroup" class="scheme-data-form" (ngSubmit)="onSubmit()">
+                <ng-template matStepLabel>Unit Data</ng-template>
+
+                <mat-form-field>
+                    <mat-label>Total Developed Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_DEVELOPED_UNITS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Allotted Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_ALLOTTED_UNITS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Alotted Units for Outright:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT"
+                        required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total allotted units for Hire purchase:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE"
+                        required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Arrears EMI:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_ARREARS_EMI" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Balance EMI:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_BALANCE_EMI" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Current EMI:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_CURRENT_EMI" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Number of Sale Deed issued:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_NO_OF_SALE_DEED_ISSUED" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Number of Live cases for Hire:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_LIVE_CASES_FOR_HIRE" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Number of paid Cases(Sale Deed not yet issued):</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_NO_OF_PAID_CASES" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Ripped unit:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_RIPPED_UNIT" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Unsold Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_UNSOLD_UNITS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Remarks:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="v_REMARKS" required>
+                </mat-form-field>
+
+                <div class="button">
+                    <button class="btn btn-light border back" matStepperPrevious>Back</button>
+                    <button type="submit" class="btn create"
+                        style="background-color: #470A3C;color: white;">Create</button>
+                </div>
+
+            </form>
+        </mat-step>
+
+    </mat-horizontal-stepper>
+</section>
+
+<section *ngIf="modeService.editScheme">
+    <p>Edit works!</p>
+</section>
+
+<section *ngIf="modeService.viewScheme" class="main-content">
+    <h2 class="heading">Create Scheme</h2>
+
+    <mat-horizontal-stepper [linear]="isLinear" #stepper="matHorizontalStepper">
+        <mat-step [stepControl]="schemeFormGroup">
+            <form [formGroup]="schemeFormGroup" class="scheme-data-form">
+                <ng-template matStepLabel>Scheme Data</ng-template>
+
+                <mat-form-field>
+                    <mat-label>Scheme Code:</mat-label>
+                    <input matInput type="text" name="scheme_code" formControlName="v_SCHEME_CODE" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Type Name:</mat-label>
+                    <mat-select formControlName="v_TYPE_NAME">
+                        <mat-option value="Type-1">Type-1</mat-option>
+                        <mat-option value="Type-2">Type-2</mat-option>
+                        <mat-option value="Type-3">Type-3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Scheme Name:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="v_SCHEME_NAME" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Unit Type:</mat-label>
+                    <mat-select formControlName="v_UNIT_TYPE">
+                        <mat-option value="Type-1">Unit Type-1</mat-option>
+                        <mat-option value="Type-2">Unit Type-2</mat-option>
+                        <mat-option value="Type-3">Unit Type-3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Cut off Date:</mat-label>
+                    <input matInput [matDatepicker]="cutOffDate" formControlName="v_CUT_OFF_DATE" required>
+                    <mat-datepicker-toggle matIconSuffix [for]="cutOffDate"></mat-datepicker-toggle>
+                    <mat-datepicker #cutOffDate color="primary"></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Final Cut off Date:</mat-label>
+                    <input matInput [matDatepicker]="finalCutOffDate" formControlName="d_FINAL_CUTOFF_DATE" required>
+                    <mat-datepicker-toggle matIconSuffix [for]="finalCutOffDate"></mat-datepicker-toggle>
+                    <mat-datepicker #finalCutOffDate color="primary"></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Rate of Scheme Interest:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_RATE_OF_SCHEME_INTEREST" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Repayment Period:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="v_REPAYMENT_METHOD" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Selling Price:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_SELLING_PRICE" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Selling Extent:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="v_SELLING_EXTENT" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Tentative Land Cost:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TENTATIVE_LAND_COST" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Final Land Cost:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_FINAL_LAND_COST" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Profit on Land:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_PROFIT_ON_LAND" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Rate Adopted:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_RATE_ADOPTED" required>
+                </mat-form-field>
+                <div class="button">
+                    <button matStepperNext class="btn" style="background-color: #470A3C;color: white;">Next</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step [stepControl]="unitFormGroup">
+            <form [formGroup]="unitFormGroup" class="scheme-data-form" (ngSubmit)="onSubmit()">
+                <ng-template matStepLabel>Unit Data</ng-template>
+
+                <mat-form-field>
+                    <mat-label>Total Developed Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_DEVELOPED_UNITS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Allotted Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_ALLOTTED_UNITS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Alotted Units for Outright:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT"
+                        required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total allotted units for Hire purchase:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE"
+                        required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Arrears EMI:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_ARREARS_EMI" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Balance EMI:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_BALANCE_EMI" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Current EMI:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_CURRENT_EMI" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Number of Sale Deed issued:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_NO_OF_SALE_DEED_ISSUED" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Number of Live cases for Hire:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_LIVE_CASES_FOR_HIRE" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Number of paid Cases(Sale Deed not yet issued):</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_NO_OF_PAID_CASES" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Ripped unit:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_RIPPED_UNIT" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total Unsold Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_UNSOLD_UNITS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Remarks:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="v_REMARKS" required>
+                </mat-form-field>
+
+                <div class="button">
+                    <button class="btn btn-light border back" matStepperPrevious>Back</button>
+                    <button type="submit" class="btn create"
+                        style="background-color: #470A3C;color: white;">Create</button>
+                </div>
+
+            </form>
+        </mat-step>
+
+    </mat-horizontal-stepper>
 </section>

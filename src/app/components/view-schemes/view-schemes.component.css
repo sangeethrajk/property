@@ -55,11 +55,36 @@
     padding: 0.4rem;
 }
 
+.excel-btn {
+    color: #470A3C;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid #470A3C;
+}
+
+.excel-btn .bi-download {
+    width: 1rem;
+    margin-right: 5px;
+}
+
 .add-dataBtn {
     color: #470A3C;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid #470A3C;
+}
+
+.add-dataBtn .bi-plus {
+    width: 1rem;
+    margin-right: 5px;
 }
 
 .filter-row .label {
     color: #470A3C;
     font-weight: bold;
+}
+
+.schemes-table th {
+    background-color: #470A3C !important;
+    color: #F6F4EB;
 }

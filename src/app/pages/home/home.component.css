@@ -51,23 +51,21 @@ mat-sidenav {
     width: 15%;
 }
 
-mat-nav-list a {
-    margin-bottom: 0.5rem;
+mat-nav-list button {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
 }
 
-:host ::ng-deep .mdc-list-item__primary-text,
-mat-nav-list a mat-icon {
+:host ::ng-deep .mdc-button__label,
+mat-nav-list button mat-icon {
     color: #F6F4EB;
 }
 
-mat-nav-list a:hover {
+mat-nav-list button:hover {
     background-color: #A3849D;
 }
 
 .active {
     background-color: #A3849D;
-}
-
-.active mat-nav-list a mat-icon {
-    color: #F6F4EB;
 }

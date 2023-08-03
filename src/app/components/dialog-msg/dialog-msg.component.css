@@ -1,0 +1,9 @@
+.success-icon {
+    color: green;
+    margin-right: 8px;
+}
+
+.failure-icon {
+    color: red;
+    margin-right: 8px;
+}
