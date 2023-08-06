@@ -4,16 +4,18 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { HttpService } from 'src/app/services/http.service';
 import { ModeService } from 'src/app/services/mode.service';
+import { Router } from '@angular/router';
+import { IdPassService } from 'src/app/services/id-pass.service';
 
 export interface SchemesData {
-  N_ID: number;
-  V_CUT_OFF_DATE: string;
-  V_SCHEME_NAME: string;
-  V_DIVISION: string;
-  V_TYPE_NAME: string;
-  V_ASSET_CATEGORY: string;
-  V_ASSET_SUB_CATEGORY: string;
-  V_ASSET_TYPE: string;
+  n_ID: number;
+  v_CUT_OFF_DATE: string;
+  v_SCHEME_NAME: string;
+  v_DIVISION: string;
+  v_TYPE_NAME: string;
+  v_ASSET_CATEGORY: string;
+  v_ASSET_SUB_CATEGORY: string;
+  v_ASSET_TYPE: string;
   ACTION: any;
   MASTER_DATA: any;
 }
@@ -24,23 +26,44 @@ export interface SchemesData {
   styleUrls: ['./view-schemes.component.css']
 })
 export class ViewSchemesComponent implements OnInit {
-  allSchemesDataSource: any;
+
+  allSchemesDataSource = new MatTableDataSource<any>([]);
   schemesData!: SchemesData[];
-  schemesTableColumns: string[] = ["N_ID", "V_CUT_OFF_DATE", "V_SCHEME_NAME", "V_DIVISION", "V_TYPE_NAME", "V_ASSET_CATEGORY", "V_ASSET_SUB_CATEGORY", "V_ASSET_TYPE", "ACTION", "MASTER_DATA"];
+  schemesTableColumns: string[] = ['n_ID', 'v_CUT_OFF_DATE', 'v_SCHEME_NAME', 'v_DIVISION', 'v_TYPE_NAME', 'v_ASSET_CATEGORY', 'v_ASSET_SUB_CATEGORY', 'v_ASSET_TYPE', 'ACTION', 'MASTER_DATA'];
+  id: any;
 
   @ViewChild(MatPaginator) paginatior !: MatPaginator;
   @ViewChild(MatSort) sort !: MatSort;
 
-  constructor(private httpService: HttpService, private modeService: ModeService) { }
+  constructor(
+    private httpService: HttpService,
+    private modeService: ModeService,
+    private router: Router,
+    private idPassService: IdPassService) {
+
+    this.getAllSchemesData(this.id);
+  }
 
   ngOnInit() {
-    this.httpService.getAllSchemesData()
-      .subscribe((schemesData: SchemesData[]) => {
-        this.schemesData = schemesData;
-        this.allSchemesDataSource = new MatTableDataSource(schemesData);
-        this.allSchemesDataSource.sort = this.sort;
-        console.log('data fetched')
-      });
+
+  }
+
+  getAllSchemesData(id: any) {
+
+    this.httpService.getAllSchemesData(id).subscribe(
+      (response) => {
+        console.log('Response:', response);
+
+        if (response && Array.isArray(response.data)) {
+          this.allSchemesDataSource.data = response.data;
+        } else {
+          console.error('Invalid response format or missing data array.');
+        }
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
   }
 
   applyFilter(event: Event) {
@@ -64,10 +87,11 @@ export class ViewSchemesComponent implements OnInit {
     this.modeService.viewScheme = false;
   }
 
-  showViewScheme() {
+  showViewScheme(n_ID: number) {
     this.modeService.createScheme = false;
     this.modeService.editScheme = false;
     this.modeService.viewScheme = true;
+    this.idPassService.setN_ID(n_ID);
   }
 
 }

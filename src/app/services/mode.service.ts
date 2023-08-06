@@ -7,7 +7,7 @@ export class ModeService {
 
   createScheme = false;
   editScheme = false;
-  viewScheme = false;
+  viewScheme = true;
 
   constructor() { }
 }

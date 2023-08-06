@@ -1,22 +1,37 @@
-import { Component, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpService } from 'src/app/services/http.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogMsgComponent } from '../dialog-msg/dialog-msg.component';
 import { ModeService } from 'src/app/services/mode.service';
+import { ActivatedRoute } from '@angular/router';
+import { IdPassService } from 'src/app/services/id-pass.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-create-scheme',
   templateUrl: './create-scheme.component.html',
   styleUrls: ['./create-scheme.component.css']
 })
-export class CreateSchemeComponent {
+export class CreateSchemeComponent implements OnInit {
 
   isLinear = false;
   schemeFormGroup!: FormGroup;
   unitFormGroup!: FormGroup;
+  schemeData: any;
+  id!: number;
+  schemeDataById: any;
+  private subscription!: Subscription;
+  schemeDataForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private http: HttpService, private dialog: MatDialog, public modeService: ModeService) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private http: HttpService,
+    private dialog: MatDialog,
+    public modeService: ModeService,
+    private route: ActivatedRoute,
+    private idPassService: IdPassService) {
+  }
 
   ngOnInit() {
     this.schemeFormGroup = this.formBuilder.group({
@@ -51,6 +66,26 @@ export class CreateSchemeComponent {
       n_TOTAL_UNSOLD_UNITS: ['', Validators.required],
       v_REMARKS: ['', Validators.required],
     });
+
+    this.id = this.idPassService.getN_ID();
+    this.fetchDataById();
+
+    this.schemeDataForm = this.formBuilder.group({
+      v_SCHEME_CODE: new FormControl(),
+      v_TYPE_NAME: new FormControl(),
+      v_SCHEME_NAME: new FormControl(),
+      v_UNIT_TYPE: new FormControl(),
+      v_CUT_OFF_DATE: new FormControl(),
+      d_FINAL_CUTOFF_DATE: new FormControl(),
+      n_RATE_OF_SCHEME_INTEREST: new FormControl(),
+      v_REPAYMENT_METHOD: new FormControl(),
+      n_SELLING_PRICE: new FormControl(),
+      v_SELLING_EXTENT: new FormControl(),
+      n_TENTATIVE_LAND_COST: new FormControl(),
+      n_FINAL_LAND_COST: new FormControl(),
+      n_PROFIT_ON_LAND: new FormControl(),
+      n_RATE_ADOPTED: new FormControl(),
+    });
   }
 
   onSubmit() {
@@ -59,8 +94,6 @@ export class CreateSchemeComponent {
         ...this.schemeFormGroup.value,
         ...this.unitFormGroup.value,
       };
-
-      // console.log(schemeData);
 
       this.http.createSchemeData(schemeData).subscribe(
         (response) => {
@@ -87,6 +120,69 @@ export class CreateSchemeComponent {
     dialogRef.afterClosed().subscribe(result => {
       // Do something when the dialog is closed (optional)
     });
+  }
+
+  getSchemeData(id: any) {
+    this.http.getSchemeDataById(id).subscribe(
+      (response) => {
+        this.schemeData = response.data;
+        console.log('Response:', response);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  fetchDataById() {
+    this.subscription = this.http.getSchemeDataById(this.id)
+      .subscribe((response) => {
+        const data = response.data;
+        // this.schemeDataById = JSON.stringify(data);
+        console.log(this.schemeDataById);
+        // this.schemeDataForm.patchValue({
+        //   v_SCHEME_CODE: this.schemeDataById.v_SCHEME_CODE,
+        //   v_TYPE_NAME: this.schemeDataById.v_TYPE_NAME,
+        //   v_SCHEME_NAME: this.schemeDataById.v_SCHEME_NAME,
+        //   v_UNIT_TYPE: this.schemeDataById.v_UNIT_TYPE,
+        //   v_CUT_OFF_DATE: this.schemeDataById.v_CUT_OFF_DATE,
+        //   d_FINAL_CUTOFF_DATE: this.schemeDataById.d_FINAL_CUTOFF_DATE,
+        //   n_RATE_OF_SCHEME_INTEREST: this.schemeDataById.n_RATE_OF_SCHEME_INTEREST,
+        //   v_REPAYMENT_METHOD: this.schemeDataById.v_REPAYMENT_METHOD,
+        //   n_SELLING_PRICE: this.schemeDataById.n_SELLING_PRICE,
+        //   v_SELLING_EXTENT: this.schemeDataById.v_SELLING_EXTENT,
+        //   n_TENTATIVE_LAND_COST: this.schemeDataById.n_TENTATIVE_LAND_COST,
+        //   n_FINAL_LAND_COST: this.schemeDataById.n_FINAL_LAND_COST,
+        //   n_PROFIT_ON_LAND: this.schemeDataById.n_PROFIT_ON_LAND,
+        //   n_RATE_ADOPTED: this.schemeDataById.n_RATE_ADOPTED,
+        // });
+        console.log(data);
+        this.schemeDataForm.patchValue({
+          v_SCHEME_CODE: data.v_SCHEME_CODE,
+          v_TYPE_NAME: data.v_TYPE_NAME,
+          v_SCHEME_NAME: data.v_SCHEME_NAME,
+          v_UNIT_TYPE: data.v_UNIT_TYPE,
+          v_CUT_OFF_DATE: data.v_CUT_OFF_DATE,
+          d_FINAL_CUTOFF_DATE: data.d_FINAL_CUTOFF_DATE,
+          n_RATE_OF_SCHEME_INTEREST: data.n_RATE_OF_SCHEME_INTEREST,
+          v_REPAYMENT_METHOD: data.v_REPAYMENT_METHOD,
+          n_SELLING_PRICE: data.n_SELLING_PRICE,
+          v_SELLING_EXTENT: data.v_SELLING_EXTENT,
+          n_TENTATIVE_LAND_COST: data.n_TENTATIVE_LAND_COST,
+          n_FINAL_LAND_COST: data.n_FINAL_LAND_COST,
+          n_PROFIT_ON_LAND: data.n_PROFIT_ON_LAND,
+          n_RATE_ADOPTED: data.n_RATE_ADOPTED,
+          // Add other form control names and their corresponding properties here.
+        });
+        console.log(this.schemeDataForm);
+      });
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe from the subscription to avoid memory leaks
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
 }
