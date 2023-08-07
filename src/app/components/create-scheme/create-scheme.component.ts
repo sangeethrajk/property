@@ -138,25 +138,6 @@ export class CreateSchemeComponent implements OnInit {
     this.subscription = this.http.getSchemeDataById(this.id)
       .subscribe((response) => {
         const data = response.data;
-        // this.schemeDataById = JSON.stringify(data);
-        console.log(this.schemeDataById);
-        // this.schemeDataForm.patchValue({
-        //   v_SCHEME_CODE: this.schemeDataById.v_SCHEME_CODE,
-        //   v_TYPE_NAME: this.schemeDataById.v_TYPE_NAME,
-        //   v_SCHEME_NAME: this.schemeDataById.v_SCHEME_NAME,
-        //   v_UNIT_TYPE: this.schemeDataById.v_UNIT_TYPE,
-        //   v_CUT_OFF_DATE: this.schemeDataById.v_CUT_OFF_DATE,
-        //   d_FINAL_CUTOFF_DATE: this.schemeDataById.d_FINAL_CUTOFF_DATE,
-        //   n_RATE_OF_SCHEME_INTEREST: this.schemeDataById.n_RATE_OF_SCHEME_INTEREST,
-        //   v_REPAYMENT_METHOD: this.schemeDataById.v_REPAYMENT_METHOD,
-        //   n_SELLING_PRICE: this.schemeDataById.n_SELLING_PRICE,
-        //   v_SELLING_EXTENT: this.schemeDataById.v_SELLING_EXTENT,
-        //   n_TENTATIVE_LAND_COST: this.schemeDataById.n_TENTATIVE_LAND_COST,
-        //   n_FINAL_LAND_COST: this.schemeDataById.n_FINAL_LAND_COST,
-        //   n_PROFIT_ON_LAND: this.schemeDataById.n_PROFIT_ON_LAND,
-        //   n_RATE_ADOPTED: this.schemeDataById.n_RATE_ADOPTED,
-        // });
-        console.log(data);
         this.schemeDataForm.patchValue({
           v_SCHEME_CODE: data.v_SCHEME_CODE,
           v_TYPE_NAME: data.v_TYPE_NAME,
@@ -174,7 +155,6 @@ export class CreateSchemeComponent implements OnInit {
           n_RATE_ADOPTED: data.n_RATE_ADOPTED,
           // Add other form control names and their corresponding properties here.
         });
-        console.log(this.schemeDataForm);
       });
   }
 
