@@ -9,13 +9,12 @@ import { IdPassService } from 'src/app/services/id-pass.service';
 
 export interface SchemesData {
   n_ID: number;
-  v_CUT_OFF_DATE: string;
+  v_CUT_OFF_DATE: Date;
   v_SCHEME_NAME: string;
   v_DIVISION: string;
   v_TYPE_NAME: string;
   v_ASSET_CATEGORY: string;
   v_ASSET_SUB_CATEGORY: string;
-  v_ASSET_TYPE: string;
   ACTION: any;
   MASTER_DATA: any;
 }
@@ -29,7 +28,7 @@ export class ViewSchemesComponent implements OnInit {
 
   allSchemesDataSource = new MatTableDataSource<any>([]);
   schemesData!: SchemesData[];
-  schemesTableColumns: string[] = ['n_ID', 'v_CUT_OFF_DATE', 'v_SCHEME_NAME', 'v_DIVISION', 'v_TYPE_NAME', 'v_ASSET_CATEGORY', 'v_ASSET_SUB_CATEGORY', 'v_ASSET_TYPE', 'ACTION', 'MASTER_DATA'];
+  schemesTableColumns: string[] = ['n_ID', 'v_CUT_OFF_DATE', 'v_SCHEME_NAME', 'v_DIVISION', 'v_TYPE_NAME', 'v_ASSET_CATEGORY', 'v_ASSET_SUB_CATEGORY', 'ACTION', 'MASTER_DATA'];
   id: any;
 
   @ViewChild(MatPaginator) paginatior !: MatPaginator;

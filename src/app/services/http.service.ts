@@ -23,14 +23,6 @@ export class HttpService {
     return this.http.post<any>(this.apiUrl + 'saveSchemeData', schemeData, { headers });
   }
 
-  // getSchemeDataById(id: number): Observable<any> {
-  //   const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-  //   const requestBody = { id: id };
-  //   const url = `${this.apiUrl}getSchemeData`;
-  //   console.log(id);
-  //   return this.http.post<any>(url, requestBody, { headers });
-  // }
-
   getSchemeDataById(id: number): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const requestBody = { id: id };

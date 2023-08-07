@@ -54,7 +54,7 @@
             <!-- Cut Off Date Column -->
             <ng-container matColumnDef="v_CUT_OFF_DATE">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Cut Off Date </th>
-                <td mat-cell *matCellDef="let scheme"> {{scheme.v_CUT_OFF_DATE}} </td>
+                <td mat-cell *matCellDef="let scheme"> {{scheme.v_CUT_OFF_DATE | date: 'dd/MM/yyyy'}} </td>
             </ng-container>
 
             <!-- Scheme Name Column -->
@@ -88,10 +88,10 @@
             </ng-container>
 
             <!-- Asset Type Column -->
-            <ng-container matColumnDef="v_ASSET_TYPE">
+            <!-- <ng-container matColumnDef="v_TYPE_NAME">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Asset Type </th>
-                <td mat-cell *matCellDef="let scheme"> {{scheme.v_ASSET_TYPE}} </td>
-            </ng-container>
+                <td mat-cell *matCellDef="let scheme"> {{scheme.v_TYPE_NAME}} </td>
+            </ng-container> -->
 
             <!-- Action Column -->
             <ng-container matColumnDef="ACTION">

@@ -7,11 +7,13 @@ import { ModeService } from 'src/app/services/mode.service';
 import { ActivatedRoute } from '@angular/router';
 import { IdPassService } from 'src/app/services/id-pass.service';
 import { Subscription } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-create-scheme',
   templateUrl: './create-scheme.component.html',
-  styleUrls: ['./create-scheme.component.css']
+  styleUrls: ['./create-scheme.component.css'],
+  providers: [DatePipe]
 })
 export class CreateSchemeComponent implements OnInit {
 
@@ -23,6 +25,7 @@ export class CreateSchemeComponent implements OnInit {
   schemeDataById: any;
   private subscription!: Subscription;
   schemeDataForm!: FormGroup;
+  unitDataForm!: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,12 +33,16 @@ export class CreateSchemeComponent implements OnInit {
     private dialog: MatDialog,
     public modeService: ModeService,
     private route: ActivatedRoute,
-    private idPassService: IdPassService) {
+    private idPassService: IdPassService,
+    private datePipe: DatePipe) {
   }
 
   ngOnInit() {
     this.schemeFormGroup = this.formBuilder.group({
       v_SCHEME_CODE: ['', Validators.required],
+      v_DIVISION: ['', Validators.required],
+      v_ASSET_CATEGORY: ['', Validators.required],
+      v_ASSET_SUB_CATEGORY: ['', Validators.required],
       v_TYPE_NAME: ['', Validators.required],
       v_SCHEME_NAME: ['', Validators.required],
       v_UNIT_TYPE: ['', Validators.required],
@@ -72,6 +79,9 @@ export class CreateSchemeComponent implements OnInit {
 
     this.schemeDataForm = this.formBuilder.group({
       v_SCHEME_CODE: new FormControl(),
+      v_DIVISION: new FormControl(),
+      v_ASSET_CATEGORY: new FormControl(),
+      v_ASSET_SUB_CATEGORY: new FormControl(),
       v_TYPE_NAME: new FormControl(),
       v_SCHEME_NAME: new FormControl(),
       v_UNIT_TYPE: new FormControl(),
@@ -86,9 +96,25 @@ export class CreateSchemeComponent implements OnInit {
       n_PROFIT_ON_LAND: new FormControl(),
       n_RATE_ADOPTED: new FormControl(),
     });
+    this.unitDataForm = this.formBuilder.group({
+      n_TOTAL_DEVELOPED_UNITS: new FormControl(),
+      n_TOTAL_ALLOTTED_UNITS: new FormControl(),
+      n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT: new FormControl(),
+      n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE: new FormControl(),
+      n_TOTAL_ARREARS_EMI: new FormControl(),
+      n_TOTAL_BALANCE_EMI: new FormControl(),
+      n_TOTAL_CURRENT_EMI: new FormControl(),
+      n_TOTAL_NO_OF_SALE_DEED_ISSUED: new FormControl(),
+      n_TOTAL_LIVE_CASES_FOR_HIRE: new FormControl(),
+      n_TOTAL_NO_OF_PAID_CASES: new FormControl(),
+      n_TOTAL_RIPPED_UNIT: new FormControl(),
+      n_TOTAL_UNSOLD_UNITS: new FormControl(),
+      v_REMARKS: new FormControl(),
+    });
   }
 
   onSubmit() {
+
     if (this.schemeFormGroup.valid && this.unitFormGroup.valid) {
       const schemeData = {
         ...this.schemeFormGroup.value,
@@ -138,13 +164,18 @@ export class CreateSchemeComponent implements OnInit {
     this.subscription = this.http.getSchemeDataById(this.id)
       .subscribe((response) => {
         const data = response.data;
+        const formattedCutOffDate = this.datePipe.transform(data.v_CUT_OFF_DATE, 'dd/MM/yyyy');
+        const formattedFinalCutOffDate = this.datePipe.transform(data.d_FINAL_CUTOFF_DATE, 'dd/MM/yyyy');
         this.schemeDataForm.patchValue({
           v_SCHEME_CODE: data.v_SCHEME_CODE,
+          v_DIVISION: data.v_DIVISION,
+          v_ASSET_CATEGORY: data.v_ASSET_CATEGORY,
+          v_ASSET_SUB_CATEGORY: data.v_ASSET_SUB_CATEGORY,
           v_TYPE_NAME: data.v_TYPE_NAME,
           v_SCHEME_NAME: data.v_SCHEME_NAME,
           v_UNIT_TYPE: data.v_UNIT_TYPE,
-          v_CUT_OFF_DATE: data.v_CUT_OFF_DATE,
-          d_FINAL_CUTOFF_DATE: data.d_FINAL_CUTOFF_DATE,
+          v_CUT_OFF_DATE: formattedCutOffDate,
+          d_FINAL_CUTOFF_DATE: formattedFinalCutOffDate,
           n_RATE_OF_SCHEME_INTEREST: data.n_RATE_OF_SCHEME_INTEREST,
           v_REPAYMENT_METHOD: data.v_REPAYMENT_METHOD,
           n_SELLING_PRICE: data.n_SELLING_PRICE,
@@ -153,7 +184,21 @@ export class CreateSchemeComponent implements OnInit {
           n_FINAL_LAND_COST: data.n_FINAL_LAND_COST,
           n_PROFIT_ON_LAND: data.n_PROFIT_ON_LAND,
           n_RATE_ADOPTED: data.n_RATE_ADOPTED,
-          // Add other form control names and their corresponding properties here.
+        });
+        this.unitDataForm.patchValue({
+          n_TOTAL_DEVELOPED_UNITS: data.n_TOTAL_DEVELOPED_UNITS,
+          n_TOTAL_ALLOTTED_UNITS: data.n_TOTAL_ALLOTTED_UNITS,
+          n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT: data.n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT,
+          n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE: data.n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE,
+          n_TOTAL_ARREARS_EMI: data.n_TOTAL_ARREARS_EMI,
+          n_TOTAL_BALANCE_EMI: data.n_TOTAL_BALANCE_EMI,
+          n_TOTAL_CURRENT_EMI: data.n_TOTAL_CURRENT_EMI,
+          n_TOTAL_NO_OF_SALE_DEED_ISSUED: data.n_TOTAL_NO_OF_SALE_DEED_ISSUED,
+          n_TOTAL_LIVE_CASES_FOR_HIRE: data.n_TOTAL_LIVE_CASES_FOR_HIRE,
+          n_TOTAL_NO_OF_PAID_CASES: data.n_TOTAL_NO_OF_PAID_CASES,
+          n_TOTAL_RIPPED_UNIT: data.n_TOTAL_RIPPED_UNIT,
+          n_TOTAL_UNSOLD_UNITS: data.n_TOTAL_UNSOLD_UNITS,
+          v_REMARKS: data.v_REMARKS,
         });
       });
   }
