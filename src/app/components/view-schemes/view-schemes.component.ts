@@ -40,11 +40,10 @@ export class ViewSchemesComponent implements OnInit {
     private router: Router,
     private idPassService: IdPassService) {
 
-    this.getAllSchemesData(this.id);
   }
 
   ngOnInit() {
-
+    this.getAllSchemesData(this.id);
   }
 
   getAllSchemesData(id: any) {
@@ -80,10 +79,11 @@ export class ViewSchemesComponent implements OnInit {
     this.modeService.viewScheme = false;
   }
 
-  showEditScheme() {
+  showEditScheme(n_ID: number) {
     this.modeService.createScheme = false;
     this.modeService.editScheme = true;
     this.modeService.viewScheme = false;
+    this.idPassService.setN_ID(n_ID);
   }
 
   showViewScheme(n_ID: number) {

@@ -23,3 +23,12 @@
 .create {
     margin: 0 0.5rem;
 }
+
+.editScheme {
+    display: flex;
+    justify-content: space-between;
+}
+
+.editScheme button {
+    height: 80%;
+}

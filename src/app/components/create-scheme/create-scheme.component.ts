@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IdPassService } from 'src/app/services/id-pass.service';
 import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-create-scheme',
@@ -136,9 +137,56 @@ export class CreateSchemeComponent implements OnInit {
     }
   }
 
+  onUpdate(id: number) {
+    const schemeData = {
+      n_ID: id,
+      ...this.schemeDataForm.value,
+      ...this.unitDataForm.value,
+    };
+
+    // console.log(schemeData);
+
+    this.http.createSchemeData(schemeData).subscribe(
+      (response) => {
+        // Handle the successful response here if needed
+        console.log('Successfully updated scheme data:', response);
+        this.openDialog(true, 'Scheme data updated successfully!');
+      },
+      (error) => {
+        // Handle errors here if needed
+        console.error('Error in updating scheme data:', error);
+        this.openDialog(false, 'Error in updating scheme data. Please try again later.');
+      }
+    );
+  }
+
+  onDelete(id: number) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '500px',
+      data: 'Are you sure you want to delete this scheme data?'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteScheme(id);
+      }
+    });
+  }
+
+  deleteScheme(id: number) {
+    this.http.deleteSchemeDataById(id).subscribe(
+      (response) => {
+        this.openDialog(true, 'Scheme data deleted successfully!');
+      },
+      (error) => {
+        this.openDialog(false, 'Error in deleting scheme data. Please try again later.');
+      }
+    );
+  }
+
   openDialog(isSuccess: boolean, message: string) {
     const dialogRef = this.dialog.open(DialogMsgComponent, {
-      width: '250px', // Set the desired width of the dialog
+      width: '400px', // Set the desired width of the dialog
       data: { isSuccess, message } // Pass the isSuccess flag and the message to the dialog
     });
 

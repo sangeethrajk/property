@@ -12,7 +12,7 @@ const routes: Routes = [
             { path: '', redirectTo: 'view-scheme', pathMatch: 'full' },
             { path: 'view-scheme', component: ViewSchemesComponent },
             { path: 'create-scheme', component: CreateSchemeComponent },
-            { path: 'master-data', component: MasterDataComponent }
+            { path: 'master-data/:units/:id', component: MasterDataComponent }
         ]
     }
 ];

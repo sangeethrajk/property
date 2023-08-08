@@ -30,4 +30,15 @@ export class HttpService {
     return this.http.post<any>(url, requestBody, { headers });
   }
 
+  deleteSchemeDataById(id: number): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const url = `${this.apiUrl}deleteScheme/${id}`;
+    return this.http.delete<any>(url, { headers });
+  }
+
+  createUnitMasterData(unitData: any[]): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(this.apiUrl + 'saveUnitData', unitData, { headers });
+  }
+
 }

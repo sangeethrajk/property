@@ -33,7 +33,8 @@
             <input type="date" id="to-date" class="date-input">
         </div>
         <div>
-            <button class="btn btn-light add-dataBtn">
+            <button class="btn btn-light add-dataBtn" routerLink="/property/home/create-scheme"
+                (click)="showCreateScheme()">
                 <span><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus"
                         viewBox="0 0 16 16">
                         <path
@@ -87,12 +88,6 @@
                 <td mat-cell *matCellDef="let scheme"> {{scheme.v_ASSET_SUB_CATEGORY}} </td>
             </ng-container>
 
-            <!-- Asset Type Column -->
-            <!-- <ng-container matColumnDef="v_TYPE_NAME">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Asset Type </th>
-                <td mat-cell *matCellDef="let scheme"> {{scheme.v_TYPE_NAME}} </td>
-            </ng-container> -->
-
             <!-- Action Column -->
             <ng-container matColumnDef="ACTION">
                 <th mat-header-cell *matHeaderCellDef> Action </th>
@@ -100,7 +95,8 @@
                     <div class="d-flex justify-content-evenly">
                         <a routerLink="/property/home/create-scheme" (click)="showViewScheme(scheme.n_ID)"
                             style="color: #470A3C;"><span class="material-symbols-rounded">visibility</span></a>
-                        <a href="" style="color: #470A3C;"><span class="material-symbols-rounded">edit</span></a>
+                        <a routerLink="/property/home/create-scheme" (click)="showEditScheme(scheme.n_ID)"
+                            style="color: #470A3C;"><span class="material-symbols-rounded">edit</span></a>
                     </div>
                 </td>
             </ng-container>
@@ -109,7 +105,8 @@
             <ng-container matColumnDef="MASTER_DATA">
                 <th mat-header-cell *matHeaderCellDef> Master Data </th>
                 <td mat-cell *matCellDef="let scheme">
-                    <!-- Add master data here if needed -->
+                    <button class="btn master-button"
+                        [routerLink]="['/property/home/master-data',scheme.n_TOTAL_DEVELOPED_UNITS, scheme.n_ID]">View</button>
                 </td>
             </ng-container>
 
@@ -124,7 +121,3 @@
         <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
     </div>
 </section>
-
-
-<button routerLink="/property/home/create-scheme" (click)="showCreateScheme()">Show Create Scheme</button>
-<button routerLink="/property/home/create-scheme" (click)="showEditScheme()">Show Edit Scheme</button>

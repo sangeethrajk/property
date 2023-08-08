@@ -88,3 +88,10 @@
     background-color: #470A3C !important;
     color: #F6F4EB;
 }
+
+.master-button {
+    border-radius: 1rem;
+    background-color: #50163C;
+    color: white;
+    font-size: 14px;
+}

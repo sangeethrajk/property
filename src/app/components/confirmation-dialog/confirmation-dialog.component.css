@@ -1,0 +1,12 @@
+.main-content {
+    padding: 2rem;
+}
+
+h2 {
+    color: #470A3C;
+}
+
+#yes {
+    background-color: #dc3545;
+    color: #ffffff;
+}
