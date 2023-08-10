@@ -1,31 +1,32 @@
 <section class="main-content">
     <div class="header-row">
         <h3 class="sub-heading">Master Data</h3>
-        <button mat-button><mat-icon>download</mat-icon>Export to Excel</button>
     </div>
     <div class="filter-row mb-4">
-        <div>
-            <label for="search-input" class="label">Filter</label><br>
-            <div class="search-container">
-                <div>
-                    <input matInput #input type="text" id="search-input" class="search-input" placeholder="Search...">
-                    <div class="search-icon">
-                        <mat-icon>search</mat-icon>
-                    </div>
-                </div>
-            </div>
+        <div *ngIf="!dataFetched">
+            <input type="file" (change)="onFileChange($event)">
         </div>
-        <div class="add-dataBtn">
-            <button mat-raised-button><mat-icon>add</mat-icon>Add New Unit Data</button>
-        </div>
+        <button class="btn btn-light excel-btn">
+            <span><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-download"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                    <path
+                        d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                </svg></span>Export to Excel
+        </button>
     </div>
 
     <div>
         <mat-tab-group>
             <mat-tab label="Unit Data">
                 <ng-template matTabContent>
-                    <input type="file" (change)="onFileChange($event)" />
-                    <button class="btn" (click)="onCreateUnitMasterData()">Send Data to Backend</button>
+                    <div>
+                        <button *ngIf="!dataFetched" class="btn button my-2" (click)="onCreateUnitMasterData()">Create
+                            Unit Data</button>
+                        <button *ngIf="dataFetched" class="btn button my-2" (click)="onUpdateUnitData()">Update Unit
+                            Data</button>
+                    </div>
                     <div class="mat-elevation-z8 table-container">
                         <table mat-table [dataSource]="unitMasterDataSource" matSort>
                             <ng-container *ngFor="let column of displayedColumns" matColumnDef="{{ column }}">
@@ -46,6 +47,9 @@
                             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                         </table>
+                        <mat-paginator [length]="unitMasterDataSource.data.length" [pageSizeOptions]="[5, 10, 20]"
+                            showFirstLastButtons [pageSize]="pageSize" (page)="pageEvent($event)">
+                        </mat-paginator>
                     </div>
                 </ng-template>
             </mat-tab>

@@ -52,10 +52,16 @@
                 <td mat-cell *matCellDef="let scheme"> {{scheme.n_ID}} </td>
             </ng-container>
 
-            <!-- Cut Off Date Column -->
-            <ng-container matColumnDef="v_CUT_OFF_DATE">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cut Off Date </th>
-                <td mat-cell *matCellDef="let scheme"> {{scheme.v_CUT_OFF_DATE | date: 'dd/MM/yyyy'}} </td>
+            <!-- Division Column -->
+            <ng-container matColumnDef="v_DIVISION">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Division </th>
+                <td mat-cell *matCellDef="let scheme"> {{scheme.v_DIVISION}} </td>
+            </ng-container>
+
+            <!-- Division Column -->
+            <ng-container matColumnDef="v_SCHEME_CODE">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Scheme Code </th>
+                <td mat-cell *matCellDef="let scheme"> {{scheme.v_SCHEME_CODE}} </td>
             </ng-container>
 
             <!-- Scheme Name Column -->
@@ -64,28 +70,22 @@
                 <td mat-cell *matCellDef="let scheme"> {{scheme.v_SCHEME_NAME}} </td>
             </ng-container>
 
-            <!-- Division Column -->
-            <ng-container matColumnDef="v_DIVISION">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Division </th>
-                <td mat-cell *matCellDef="let scheme"> {{scheme.v_DIVISION}} </td>
-            </ng-container>
-
-            <!-- Type Name Column -->
-            <ng-container matColumnDef="v_TYPE_NAME">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Type Name </th>
-                <td mat-cell *matCellDef="let scheme"> {{scheme.v_TYPE_NAME}} </td>
-            </ng-container>
-
-            <!-- Asset Category Column -->
-            <ng-container matColumnDef="v_ASSET_CATEGORY">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Asset Category </th>
-                <td mat-cell *matCellDef="let scheme"> {{scheme.v_ASSET_CATEGORY}} </td>
-            </ng-container>
-
             <!-- Asset Sub Category Column -->
             <ng-container matColumnDef="v_ASSET_SUB_CATEGORY">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Asset Sub Category </th>
                 <td mat-cell *matCellDef="let scheme"> {{scheme.v_ASSET_SUB_CATEGORY}} </td>
+            </ng-container>
+
+            <!-- Asset Type Column -->
+            <ng-container matColumnDef="v_ASSET_TYPE">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Asset Type </th>
+                <td mat-cell *matCellDef="let scheme"> {{scheme.v_ASSET_TYPE}} </td>
+            </ng-container>
+
+            <!-- Asset Category Column -->
+            <ng-container matColumnDef="n_TOTAL_DEVELOPED_UNITS">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Developed Units </th>
+                <td mat-cell *matCellDef="let scheme"> {{scheme.n_TOTAL_DEVELOPED_UNITS}} </td>
             </ng-container>
 
             <!-- Action Column -->

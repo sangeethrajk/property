@@ -10,6 +10,17 @@ import { ViewSchemesComponent } from 'src/app/components/view-schemes/view-schem
 import { CreateSchemeComponent } from 'src/app/components/create-scheme/create-scheme.component';
 import { MasterDataComponent } from 'src/app/components/master-data/master-data.component';
 import { DialogMsgComponent } from 'src/app/components/dialog-msg/dialog-msg.component';
+import { NgxUiLoaderConfig, NgxUiLoaderModule, SPINNER, NgxUiLoaderRouterModule, NgxUiLoaderHttpModule } from 'ngx-ui-loader';
+
+const ngxUiLoaderConfig: NgxUiLoaderConfig = {
+    text: "Loading...",
+    textColor: "#470A3C",
+    textPosition: "center-center",
+    bgsColor: "#ffffff",
+    fgsColor: "#470A3C",
+    fgsType: SPINNER.squareJellyBox,
+    fgsSize: 100,
+};
 
 @NgModule({
     declarations: [ViewSchemesComponent, CreateSchemeComponent, HomeComponent, MasterDataComponent, DialogMsgComponent],
@@ -19,7 +30,9 @@ import { DialogMsgComponent } from 'src/app/components/dialog-msg/dialog-msg.com
         MaterialModule,
         HttpClientModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        NgxUiLoaderModule,
+        NgxUiLoaderHttpModule.forRoot(ngxUiLoaderConfig)
     ]
 })
 export class HomeModule { }

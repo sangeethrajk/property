@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { SchemesData } from '../components/view-schemes/view-schemes.component';
+import { UnitData } from '../components/master-data/master-data.component';
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +14,14 @@ export class HttpService {
   constructor(private http: HttpClient) { }
 
   getAllSchemesData(id: number): Observable<any> {
-    const url = `${this.apiUrl}getAllSchemeData`;
+    const url = `${this.apiUrl}getAllSchemes`;
     const requestBody = { id: id };
     return this.http.post<any>(url, requestBody);
   }
 
-  createSchemeData(schemeData: any): Observable<any> {
+  createSchemeData(schemeData: any): Observable<any[]> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any>(this.apiUrl + 'saveSchemeData', schemeData, { headers });
+    return this.http.post<any[]>(this.apiUrl + 'saveSchemeData', schemeData, { headers });
   }
 
   getSchemeDataById(id: number): Observable<any> {
@@ -37,6 +38,16 @@ export class HttpService {
   }
 
   createUnitMasterData(unitData: any[]): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(this.apiUrl + 'saveUnitData', unitData, { headers });
+  }
+
+  getUnitMasterData(id: number): Observable<any[]> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any[]>(this.apiUrl + 'getUnitOfOneScheme', { id }, { headers });
+  }
+
+  updateUnitMasterData(unitData: any[]): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<any>(this.apiUrl + 'saveUnitData', unitData, { headers });
   }

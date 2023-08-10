@@ -4,11 +4,13 @@ import { HttpService } from 'src/app/services/http.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogMsgComponent } from '../dialog-msg/dialog-msg.component';
 import { ModeService } from 'src/app/services/mode.service';
+import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { IdPassService } from 'src/app/services/id-pass.service';
 import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-create-scheme',
@@ -34,23 +36,37 @@ export class CreateSchemeComponent implements OnInit {
     private dialog: MatDialog,
     public modeService: ModeService,
     private route: ActivatedRoute,
+    private router: Router,
     private idPassService: IdPassService,
-    private datePipe: DatePipe) {
+    private datePipe: DatePipe,
+    private loader: NgxUiLoaderService,
+  ) {
   }
 
   ngOnInit() {
+    if (!this.modeService.createScheme && !this.modeService.editScheme && !this.modeService.viewScheme) {
+      // Route to the desired component when all modes are false
+      this.router.navigate(['/property/home/view-scheme']);
+    }
     this.schemeFormGroup = this.formBuilder.group({
-      v_SCHEME_CODE: ['', Validators.required],
       v_DIVISION: ['', Validators.required],
-      v_ASSET_CATEGORY: ['', Validators.required],
-      v_ASSET_SUB_CATEGORY: ['', Validators.required],
-      v_TYPE_NAME: ['', Validators.required],
-      v_SCHEME_NAME: ['', Validators.required],
       v_UNIT_TYPE: ['', Validators.required],
+      v_SCHEME_CODE: ['', Validators.required],
+      v_SCHEME_NAME: ['', Validators.required],
+      n_NO_OF_HIG_UNITS: ['', Validators.required],
+      n_NO_OF_MIG_UNITS: ['', Validators.required],
+      n_NO_OF_LIG_UNITS: ['', Validators.required],
+      n_NO_OF_EWS_UNITS: ['', Validators.required],
+      n_TOTAL_NO_OF_RESIDENTIAL_UNITS: ['', Validators.required],
+      n_TOTAL_NO_OF_COMMERCIAL_UNITS: ['', Validators.required],
+      n_NO_OF_OUTRIGHT_UNITS: ['', Validators.required],
+      n_NO_OF_HIREPURCHASE_UNITS: ['', Validators.required],
+      n_NO_OF_SFS_UNITS: ['', Validators.required],
+      v_SCHEME_TYPE: ['', Validators.required],
       v_CUT_OFF_DATE: ['', Validators.required],
-      d_FINAL_CUTOFF_DATE: ['', Validators.required],
+      v_FINAL_CUTOFF_DATE: ['', Validators.required],
       n_RATE_OF_SCHEME_INTEREST: ['', Validators.required],
-      v_REPAYMENT_METHOD: ['', Validators.required],
+      v_REPAYMENT_PERIOD: ['', Validators.required],
       n_SELLING_PRICE: ['', Validators.required],
       v_SELLING_EXTENT: ['', Validators.required],
       n_TENTATIVE_LAND_COST: ['', Validators.required],
@@ -64,6 +80,9 @@ export class CreateSchemeComponent implements OnInit {
       n_TOTAL_ALLOTTED_UNITS: ['', Validators.required],
       n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT: ['', Validators.required],
       n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE: ['', Validators.required],
+      n_TOTAL_ALLOTTED_UNITS_FOR_SFS: ['', Validators.required],
+      n_TOTAL_ALLOTTED_UNITS_FOR_RESIDENTIAL: ['', Validators.required],
+      n_TOTAL_ALLOTTED_UNITS_FOR_COMMERCIAL: ['', Validators.required],
       n_TOTAL_ARREARS_EMI: ['', Validators.required],
       n_TOTAL_BALANCE_EMI: ['', Validators.required],
       n_TOTAL_CURRENT_EMI: ['', Validators.required],
@@ -79,17 +98,24 @@ export class CreateSchemeComponent implements OnInit {
     this.fetchDataById();
 
     this.schemeDataForm = this.formBuilder.group({
-      v_SCHEME_CODE: new FormControl(),
       v_DIVISION: new FormControl(),
-      v_ASSET_CATEGORY: new FormControl(),
-      v_ASSET_SUB_CATEGORY: new FormControl(),
-      v_TYPE_NAME: new FormControl(),
-      v_SCHEME_NAME: new FormControl(),
       v_UNIT_TYPE: new FormControl(),
+      v_SCHEME_CODE: new FormControl(),
+      v_SCHEME_NAME: new FormControl(),
+      n_NO_OF_HIG_UNITS: new FormControl(),
+      n_NO_OF_MIG_UNITS: new FormControl(),
+      n_NO_OF_LIG_UNITS: new FormControl(),
+      n_NO_OF_EWS_UNITS: new FormControl(),
+      n_TOTAL_NO_OF_RESIDENTIAL_UNITS: new FormControl(),
+      n_TOTAL_NO_OF_COMMERCIAL_UNITS: new FormControl(),
+      n_NO_OF_OUTRIGHT_UNITS: new FormControl(),
+      n_NO_OF_HIREPURCHASE_UNITS: new FormControl(),
+      n_NO_OF_SFS_UNITS: new FormControl(),
+      v_SCHEME_TYPE: new FormControl(),
       v_CUT_OFF_DATE: new FormControl(),
-      d_FINAL_CUTOFF_DATE: new FormControl(),
+      v_FINAL_CUTOFF_DATE: new FormControl(),
       n_RATE_OF_SCHEME_INTEREST: new FormControl(),
-      v_REPAYMENT_METHOD: new FormControl(),
+      v_REPAYMENT_PERIOD: new FormControl(),
       n_SELLING_PRICE: new FormControl(),
       v_SELLING_EXTENT: new FormControl(),
       n_TENTATIVE_LAND_COST: new FormControl(),
@@ -102,6 +128,9 @@ export class CreateSchemeComponent implements OnInit {
       n_TOTAL_ALLOTTED_UNITS: new FormControl(),
       n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT: new FormControl(),
       n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE: new FormControl(),
+      n_TOTAL_ALLOTTED_UNITS_FOR_SFS: new FormControl(),
+      n_TOTAL_ALLOTTED_UNITS_FOR_RESIDENTIAL: new FormControl(),
+      n_TOTAL_ALLOTTED_UNITS_FOR_COMMERCIAL: new FormControl(),
       n_TOTAL_ARREARS_EMI: new FormControl(),
       n_TOTAL_BALANCE_EMI: new FormControl(),
       n_TOTAL_CURRENT_EMI: new FormControl(),
@@ -122,7 +151,7 @@ export class CreateSchemeComponent implements OnInit {
         ...this.unitFormGroup.value,
       };
 
-      this.http.createSchemeData(schemeData).subscribe(
+      this.http.createSchemeData([schemeData]).subscribe(
         (response) => {
           // Handle the successful response here if needed
           console.log('Successfully created scheme data:', response);
@@ -146,7 +175,7 @@ export class CreateSchemeComponent implements OnInit {
 
     // console.log(schemeData);
 
-    this.http.createSchemeData(schemeData).subscribe(
+    this.http.createSchemeData([schemeData]).subscribe(
       (response) => {
         // Handle the successful response here if needed
         console.log('Successfully updated scheme data:', response);
@@ -161,13 +190,23 @@ export class CreateSchemeComponent implements OnInit {
   }
 
   onDelete(id: number) {
+
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '500px',
-      data: 'Are you sure you want to delete this scheme data?'
+      data: {
+        message: 'Are you sure you want to delete this scheme data?',
+        confirmBackgroundColor: 'red',
+        cancelBackgroundColor: 'white',
+        confirmTextColor: 'white',
+        cancelTextColor: 'black',
+        confirmText: 'Yes',
+        cancelText: 'No'
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result === true) {
+        this.loader.start();
         this.deleteScheme(id);
       }
     });
@@ -176,9 +215,11 @@ export class CreateSchemeComponent implements OnInit {
   deleteScheme(id: number) {
     this.http.deleteSchemeDataById(id).subscribe(
       (response) => {
+        this.loader.stop();
         this.openDialog(true, 'Scheme data deleted successfully!');
       },
       (error) => {
+        this.loader.stop();
         this.openDialog(false, 'Error in deleting scheme data. Please try again later.');
       }
     );
@@ -190,7 +231,6 @@ export class CreateSchemeComponent implements OnInit {
       data: { isSuccess, message } // Pass the isSuccess flag and the message to the dialog
     });
 
-    // Optionally, you can handle dialog events
     dialogRef.afterClosed().subscribe(result => {
       // Do something when the dialog is closed (optional)
     });
@@ -215,29 +255,40 @@ export class CreateSchemeComponent implements OnInit {
         const formattedCutOffDate = this.datePipe.transform(data.v_CUT_OFF_DATE, 'dd/MM/yyyy');
         const formattedFinalCutOffDate = this.datePipe.transform(data.d_FINAL_CUTOFF_DATE, 'dd/MM/yyyy');
         this.schemeDataForm.patchValue({
-          v_SCHEME_CODE: data.v_SCHEME_CODE,
           v_DIVISION: data.v_DIVISION,
-          v_ASSET_CATEGORY: data.v_ASSET_CATEGORY,
-          v_ASSET_SUB_CATEGORY: data.v_ASSET_SUB_CATEGORY,
-          v_TYPE_NAME: data.v_TYPE_NAME,
-          v_SCHEME_NAME: data.v_SCHEME_NAME,
           v_UNIT_TYPE: data.v_UNIT_TYPE,
+          v_SCHEME_CODE: data.v_SCHEME_CODE,
+          v_SCHEME_NAME: data.v_SCHEME_NAME,
+          n_NO_OF_HIG_UNITS: data.n_NO_OF_HIG_UNITS,
+          n_NO_OF_MIG_UNITS: data.n_NO_OF_MIG_UNITS,
+          n_NO_OF_LIG_UNITS: data.n_NO_OF_LIG_UNITS,
+          n_NO_OF_EWS_UNITS: data.n_NO_OF_EWS_UNITS,
+          n_TOTAL_NO_OF_RESIDENTIAL_UNITS: data.n_TOTAL_NO_OF_RESIDENTIAL_UNITS,
+          n_TOTAL_NO_OF_COMMERCIAL_UNITS: data.n_TOTAL_NO_OF_COMMERCIAL_UNITS,
+          n_NO_OF_OUTRIGHT_UNITS: data.n_NO_OF_OUTRIGHT_UNITS,
+          n_NO_OF_HIREPURCHASE_UNITS: data.n_NO_OF_HIREPURCHASE_UNITS,
+          n_NO_OF_SFS_UNITS: data.n_NO_OF_SFS_UNITS,
+          v_SCHEME_TYPE: data.v_SCHEME_TYPE,
           v_CUT_OFF_DATE: formattedCutOffDate,
-          d_FINAL_CUTOFF_DATE: formattedFinalCutOffDate,
+          v_FINAL_CUTOFF_DATE: formattedFinalCutOffDate,
           n_RATE_OF_SCHEME_INTEREST: data.n_RATE_OF_SCHEME_INTEREST,
-          v_REPAYMENT_METHOD: data.v_REPAYMENT_METHOD,
+          v_REPAYMENT_PERIOD: data.v_REPAYMENT_PERIOD,
           n_SELLING_PRICE: data.n_SELLING_PRICE,
           v_SELLING_EXTENT: data.v_SELLING_EXTENT,
           n_TENTATIVE_LAND_COST: data.n_TENTATIVE_LAND_COST,
           n_FINAL_LAND_COST: data.n_FINAL_LAND_COST,
           n_PROFIT_ON_LAND: data.n_PROFIT_ON_LAND,
           n_RATE_ADOPTED: data.n_RATE_ADOPTED,
+
         });
         this.unitDataForm.patchValue({
           n_TOTAL_DEVELOPED_UNITS: data.n_TOTAL_DEVELOPED_UNITS,
           n_TOTAL_ALLOTTED_UNITS: data.n_TOTAL_ALLOTTED_UNITS,
           n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT: data.n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT,
           n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE: data.n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE,
+          n_TOTAL_ALLOTTED_UNITS_FOR_SFS: data.n_TOTAL_ALLOTTED_UNITS_FOR_SFS,
+          n_TOTAL_ALLOTTED_UNITS_FOR_RESIDENTIAL: data.n_TOTAL_ALLOTTED_UNITS_FOR_RESIDENTIAL,
+          n_TOTAL_ALLOTTED_UNITS_FOR_COMMERCIAL: data.n_TOTAL_ALLOTTED_UNITS_FOR_COMMERCIAL,
           n_TOTAL_ARREARS_EMI: data.n_TOTAL_ARREARS_EMI,
           n_TOTAL_BALANCE_EMI: data.n_TOTAL_BALANCE_EMI,
           n_TOTAL_CURRENT_EMI: data.n_TOTAL_CURRENT_EMI,

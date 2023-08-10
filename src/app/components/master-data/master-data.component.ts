@@ -1,26 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { HttpService } from 'src/app/services/http.service';
 import * as XLSX from 'xlsx';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
-interface UnitData {
-  N_ID: number;
-  V_TYPE_NAME: string;
-  V_UNIT_ID: string;
-  V_UNIT_NO: string;
-  V_BLOCK_NO: string;
-  V_FLOOR_NO: string;
-  V_PLINTH_AREA: string;
-  V_UDS_AREA: string;
-  V_PLOT_AREA: string;
-  V_CARPET_AREA: string;
-  V_ROAD_FACING: string;
-  V_CORNER_PLOT_STATUS: string;
-  V_GOVT_DISCRETION_QUOTA: string;
-  V_UNIT_ALLOTTED_STATUS: string;
-  V_ALLOTMENT_TYPE: string;
-  V_CATEGORY: string;
-  ACTION: any;
+export interface UnitData {
+  n_ID: number;
+  n_SCHEME_ID: number;
+  v_SCHEME_TYPE: string;
+  v_ASSET_SUB_CATEGORY: string;
+  v_ASSET_TYPE: string;
+  v_UNIT_ID: string;
+  v_UNIT_NO: string;
+  v_BLOCK_NO: string;
+  v_FLOOR_NO: string;
+  v_PLINTH_AREA: string;
+  v_UDS_AREA: string;
+  v_PLOT_AREA: string;
+  v_CARPET_AREA: string;
+  v_ROAD_FACING: string;
+  v_CORNER_PLOT_STATUS: string;
+  v_GOVT_DISCRETION_QUOTA: string;
+  v_UNIT_ALLOTTED_STATUS: string;
+  v_ALLOTMENT_TYPE: string;
+  v_CATEGORY: string;
 }
 
 @Component({
@@ -28,53 +36,42 @@ interface UnitData {
   templateUrl: './master-data.component.html',
   styleUrls: ['./master-data.component.css']
 })
-export class MasterDataComponent implements OnInit {
-  // unitMasterDataSource: any;
-  // unitTableColumns: string[] = [
-  //   'N_ID',
-  //   'V_TYPE_NAME',
-  //   'V_UNIT_ID',
-  //   'V_UNIT_NO',
-  //   'V_BLOCK_NO',
-  //   'V_FLOOR_NO',
-  //   'V_PLINTH_AREA',
-  //   'V_UDS_AREA',
-  //   'V_PLOT_AREA',
-  //   'V_CARPET_AREA',
-  //   'V_ROAD_FACING',
-  //   'V_CORNER_PLOT_STATUS',
-  //   'V_GOVT_DISCRETION_QUOTA',
-  //   'V_UNIT_ALLOTTED_STATUS',
-  //   'V_ALLOTMENT_TYPE',
-  //   'V_CATEGORY',
-  //   'ACTION'
-  // ];
+export class MasterDataComponent implements OnInit, AfterViewInit {
 
-  unitMasterDataSource: any[] = [];
+  dataFetched: boolean = false;
+  fetchedUnitMasterData: any[] = [];
+  unitMasterDataSource: MatTableDataSource<UnitData> = new MatTableDataSource<UnitData>();
   displayedColumns: string[] = [
-    'N_ID',
-    'V_TYPE_NAME',
-    'V_UNIT_ID',
-    'V_UNIT_NO',
-    'V_BLOCK_NO',
-    'V_FLOOR_NO',
-    'V_PLINTH_AREA',
-    'V_UDS_AREA',
-    'V_PLOT_AREA',
-    'V_CARPET_AREA',
-    'V_ROAD_FACING',
-    'V_CORNER_PLOT_STATUS',
-    'V_GOVT_DISCRETION_QUOTA',
-    'V_UNIT_ALLOTTED_STATUS',
-    'V_ALLOTMENT_TYPE',
-    'V_CATEGORY',
-    'ACTION'
+    'n_ID',
+    'n_SCHEME_ID',
+    'v_SCHEME_TYPE',
+    'v_ASSET_SUB_CATEGORY',
+    'v_ASSET_TYPE',
+    'v_UNIT_ID',
+    'v_UNIT_NO',
+    'v_BLOCK_NO',
+    'v_FLOOR_NO',
+    'v_PLINTH_AREA',
+    'v_UDS_AREA',
+    'v_PLOT_AREA',
+    'v_CARPET_AREA',
+    'v_ROAD_FACING',
+    'v_CORNER_PLOT_STATUS',
+    'v_GOVT_DISCRETION_QUOTA',
+    'v_UNIT_ALLOTTED_STATUS',
+    'v_ALLOTMENT_TYPE',
+    'v_CATEGORY'
   ];
   editedRowIndex: number | null = null;
+  pageSize = 10;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private route: ActivatedRoute,
     private http: HttpService,
+    private loader: NgxUiLoaderService,
+    private dialog: MatDialog
   ) { }
 
   totalDevelopedUnits!: number;
@@ -84,6 +81,47 @@ export class MasterDataComponent implements OnInit {
       this.totalDevelopedUnits = +params.get('units')!;
       this.schemeId = +params.get('id')!;
     });
+
+    if (!this.dataFetched) {
+      this.fetchUnitMasterData();
+    } else {
+      this.populateInitialRows(this.schemeId);
+    }
+  }
+
+  populateInitialRows(schemeId: number) {
+    const initialData: UnitData[] = [];
+    for (let i = 1; i <= this.totalDevelopedUnits; i++) {
+      const initialRow: UnitData = {
+        n_ID: i,
+        n_SCHEME_ID: schemeId,
+        v_SCHEME_TYPE: '',
+        v_ASSET_SUB_CATEGORY: '',
+        v_ASSET_TYPE: '',
+        v_UNIT_ID: '',
+        v_UNIT_NO: '',
+        v_BLOCK_NO: '',
+        v_FLOOR_NO: '',
+        v_PLINTH_AREA: '',
+        v_UDS_AREA: '',
+        v_PLOT_AREA: '',
+        v_CARPET_AREA: '',
+        v_ROAD_FACING: '',
+        v_CORNER_PLOT_STATUS: '',
+        v_GOVT_DISCRETION_QUOTA: '',
+        v_UNIT_ALLOTTED_STATUS: '',
+        v_ALLOTMENT_TYPE: '',
+        v_CATEGORY: ''
+      };
+      initialData.push(initialRow);
+    }
+
+    this.unitMasterDataSource = new MatTableDataSource(initialData);
+    this.initPaginator();
+  }
+
+  pageEvent(event: PageEvent) {
+    this.pageSize = event.pageSize;
   }
 
   fileUploaded: boolean = false;
@@ -112,10 +150,10 @@ export class MasterDataComponent implements OnInit {
       }
 
       const modifiedData = parsedData.map(row => {
-        return { ...row, N_ID: constantN_ID };
+        return { ...row, n_SCHEME_ID: constantN_ID };
       });
 
-      this.unitMasterDataSource = modifiedData;
+      this.unitMasterDataSource = new MatTableDataSource(modifiedData);
       this.displayedColumns = Object.keys(modifiedData[0]);
       this.fileUploaded = true;
       console.log("Data:", modifiedData);
@@ -133,37 +171,140 @@ export class MasterDataComponent implements OnInit {
   }
 
   saveEdit(row: any, index: number): void {
-    this.unitMasterDataSource[index] = { ...row };
+    const updatedData = [...this.unitMasterDataSource.data]; // Create a copy of the data array
+    updatedData[index] = { ...row }; // Update the specific row in the copy
+    this.unitMasterDataSource.data = updatedData; // Update the data property with the modified data
     this.editedRowIndex = null;
   }
 
   onCreateUnitMasterData() {
-    const unitData = this.unitMasterDataSource.map(element => {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '500px',
+      data: {
+        message: 'Are you sure you want to create this unit data?',
+        confirmBackgroundColor: 'green',
+        cancelBackgroundColor: 'red',
+        confirmTextColor: 'white',
+        cancelTextColor: 'white',
+        confirmText: 'Yes',
+        cancelText: 'No'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.loader.start();
+
+        const unitData = this.unitMasterDataSource.data.map((element: UnitData) => {
+          const mappedData: any = {
+            n_SCHEME_ID: this.schemeId
+          };
+
+          this.displayedColumns.forEach((column: string) => {
+            mappedData[column] = element[column as keyof UnitData];
+          });
+
+          return mappedData;
+        });
+
+        this.http.createUnitMasterData(unitData).subscribe(
+          response => {
+            if (response.result === true) {
+              console.log('Success:', response.message);
+              this.unitMasterDataSource.data = []; // Clear the data in the MatTableDataSource
+              this.fileUploaded = false; // Reset the fileUploaded flag
+            } else {
+              console.error('API returned false result:', response.message);
+            }
+            this.loader.stop();
+          },
+          error => {
+            console.error('Error:', error);
+            this.loader.stop();
+          }
+        );
+      }
+    });
+  }
+
+  fetchUnitMasterData() {
+    this.http.getUnitMasterData(this.schemeId).subscribe(
+      (response: any) => {
+        if (response) {
+          const data = response.data;
+          if (data.length === 0) {
+            this.populateInitialRows(this.schemeId);
+          } else {
+            this.fetchedUnitMasterData = data.map((row: UnitData) => ({
+              n_ID: row.n_ID,
+              n_SCHEME_ID: row.n_SCHEME_ID,
+              v_SCHEME_TYPE: row.v_SCHEME_TYPE,
+              v_UNIT_ID: row.v_UNIT_ID,
+              v_UNIT_NO: row.v_UNIT_NO,
+              v_BLOCK_NO: row.v_BLOCK_NO,
+              v_FLOOR_NO: row.v_FLOOR_NO,
+              v_PLINTH_AREA: row.v_PLINTH_AREA,
+              v_UDS_AREA: row.v_UDS_AREA,
+              v_PLOT_AREA: row.v_PLOT_AREA,
+              v_CARPET_AREA: row.v_CARPET_AREA,
+              v_ROAD_FACING: row.v_ROAD_FACING,
+              v_CORNER_PLOT_STATUS: row.v_CORNER_PLOT_STATUS,
+              v_GOVT_DISCRETION_QUOTA: row.v_GOVT_DISCRETION_QUOTA,
+              v_UNIT_ALLOTTED_STATUS: row.v_UNIT_ALLOTTED_STATUS,
+              v_ALLOTMENT_TYPE: row.v_ALLOTMENT_TYPE,
+              v_CATEGORY: row.v_CATEGORY
+            }));
+            this.dataFetched = true;
+            this.unitMasterDataSource = new MatTableDataSource<UnitData>(data);
+            this.initPaginator();
+          }
+        } else {
+          console.error('API returned false result:', response.message);
+        }
+      },
+      error => {
+        console.error('Error fetching unit data:', error);
+      }
+    );
+
+  }
+
+  initPaginator() {
+    // Initialize paginator here after data is fetched and assigned
+    this.unitMasterDataSource.paginator = this.paginator;
+  }
+
+  ngAfterViewInit() {
+    this.unitMasterDataSource.paginator = this.paginator;
+  }
+
+  onUpdateUnitData() {
+    const unitData = this.unitMasterDataSource.data.map((element: UnitData) => {
       const mappedData: any = {
         n_SCHEME_ID: this.schemeId
       };
 
-      this.displayedColumns.forEach(column => {
-        mappedData[column] = element[column];
+      this.displayedColumns.forEach((column: string) => {
+        mappedData[column] = element[column as keyof UnitData];
       });
 
       return mappedData;
     });
 
-    console.log('unitData:', unitData);
-    this.saveUnitDataArray(unitData);
-  }
+    console.log(unitData);
 
-
-  saveUnitDataArray(unitData: any[]) {
-    this.http.createUnitMasterData(unitData).subscribe(
+    this.http.updateUnitMasterData(unitData).subscribe(
       response => {
-        console.log(response);
+        if (response.result === true) {
+          console.log('Success:', response.message);
+          this.unitMasterDataSource.data = [];
+        }
       },
       error => {
-        console.log(error);
+        console.error('Error:', error);
       }
     );
   }
-
 }
+
+

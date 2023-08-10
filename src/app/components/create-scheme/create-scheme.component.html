@@ -7,32 +7,22 @@
                 <ng-template matStepLabel>Scheme Data</ng-template>
 
                 <mat-form-field>
-                    <mat-label>Scheme Code:</mat-label>
-                    <input matInput type="text" formControlName="v_SCHEME_CODE" required>
-                </mat-form-field>
-
-                <mat-form-field>
                     <mat-label>Division:</mat-label>
                     <input matInput type="text" formControlName="v_DIVISION" required>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-label>Asset Category:</mat-label>
-                    <input matInput type="text" formControlName="v_ASSET_CATEGORY" required>
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Asset Sub-Category:</mat-label>
-                    <input matInput type="text" formControlName="v_ASSET_SUB_CATEGORY" required>
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Type Name:</mat-label>
-                    <mat-select formControlName="v_TYPE_NAME">
-                        <mat-option value="Type-1">Type-1</mat-option>
-                        <mat-option value="Type-2">Type-2</mat-option>
-                        <mat-option value="Type-3">Type-3</mat-option>
+                    <mat-label>Unit Type:</mat-label>
+                    <mat-select formControlName="v_UNIT_TYPE">
+                        <mat-option value="Flat">Flat</mat-option>
+                        <mat-option value="House">House</mat-option>
+                        <mat-option value="Plot">Plot</mat-option>
                     </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Scheme Code:</mat-label>
+                    <input matInput type="text" formControlName="v_SCHEME_CODE" required>
                 </mat-form-field>
 
                 <mat-form-field>
@@ -41,11 +31,57 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-label>Unit Type:</mat-label>
-                    <mat-select formControlName="v_UNIT_TYPE">
-                        <mat-option value="Type-1">Unit Type-1</mat-option>
-                        <mat-option value="Type-2">Unit Type-2</mat-option>
-                        <mat-option value="Type-3">Unit Type-3</mat-option>
+                    <mat-label>No of HIG Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_NO_OF_HIG_UNITS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of MIG Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_NO_OF_MIG_UNITS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of LIG Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_NO_OF_LIG_UNITS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of EWS Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_NO_OF_EWS_UNITS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total No of Residential Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_NO_OF_RESIDENTIAL_UNITS"
+                        required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total No of Commercial Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_NO_OF_COMMERCIAL_UNITS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of Outright Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_NO_OF_OUTRIGHT_UNITS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of Hirepurchase Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_NO_OF_HIREPURCHASE_UNITS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of SFS Units:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_NO_OF_SFS_UNITS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Scheme Type:</mat-label>
+                    <mat-select formControlName="v_SCHEME_TYPE">
+                        <mat-option value="Hirepurchase">Hire Purchase</mat-option>
+                        <mat-option value="selffinance">Self Finance</mat-option>
+                        <mat-option value="outright">Outright</mat-option>
                     </mat-select>
                 </mat-form-field>
 
@@ -58,7 +94,7 @@
 
                 <mat-form-field>
                     <mat-label>Final Cut off Date:</mat-label>
-                    <input matInput [matDatepicker]="finalCutOffDate" formControlName="d_FINAL_CUTOFF_DATE" required>
+                    <input matInput [matDatepicker]="finalCutOffDate" formControlName="v_FINAL_CUTOFF_DATE" required>
                     <mat-datepicker-toggle matIconSuffix [for]="finalCutOffDate"></mat-datepicker-toggle>
                     <mat-datepicker #finalCutOffDate></mat-datepicker>
                 </mat-form-field>
@@ -70,7 +106,7 @@
 
                 <mat-form-field>
                     <mat-label>Repayment Period:</mat-label>
-                    <input matInput type="text" name="" id="" formControlName="v_REPAYMENT_METHOD" required>
+                    <input matInput type="text" name="" id="" formControlName="v_REPAYMENT_PERIOD" required>
                 </mat-form-field>
 
                 <mat-form-field>
@@ -102,6 +138,7 @@
                     <mat-label>Rate Adopted:</mat-label>
                     <input matInput type="text" name="" id="" formControlName="n_RATE_ADOPTED" required>
                 </mat-form-field>
+
                 <div class="button">
                     <button matStepperNext class="btn" style="background-color: #470A3C;color: white;">Next</button>
                 </div>
@@ -130,6 +167,23 @@
                 <mat-form-field>
                     <mat-label>Total allotted units for Hire purchase:</mat-label>
                     <input matInput type="text" name="" id="" formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE"
+                        required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total allotted units for SFS:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_SFS" required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total allotted units for Residential:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_RESIDENTIAL"
+                        required>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total allotted units for Commercial:</mat-label>
+                    <input matInput type="text" name="" id="" formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_COMMERCIAL"
                         required>
                 </mat-form-field>
 
@@ -194,7 +248,8 @@
     <div class="editScheme">
         <h2 class="heading w-25">Edit Scheme</h2>
         <div>
-            <button type="submit" class="btn create" style="background-color: #470A3C;color: white;">Update</button>
+            <button type="submit" class="btn create" style="background-color: #470A3C;color: white;"
+                (click)="onUpdate(id)">Update</button>
             <button type="button" class="btn btn-danger" (click)="onDelete(id)">Delete</button>
         </div>
     </div>
@@ -204,37 +259,8 @@
                 <ng-template matStepLabel>Scheme Data</ng-template>
 
                 <mat-form-field>
-                    <mat-label>Scheme Code:</mat-label>
-                    <input type="text" matInput formControlName="v_SCHEME_CODE">
-                </mat-form-field>
-
-                <mat-form-field>
                     <mat-label>Division:</mat-label>
-                    <input type="text" matInput formControlName="v_DIVISION">
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Asset Category:</mat-label>
-                    <input type="text" matInput formControlName="v_ASSET_CATEGORY">
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Asset Sub-Category:</mat-label>
-                    <input type="text" matInput formControlName="v_ASSET_SUB_CATEGORY">
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Type Name:</mat-label>
-                    <mat-select formControlName="v_UNIT_TYPE">
-                        <mat-option value="Type-1">Unit Type-1</mat-option>
-                        <mat-option value="Type-2">Unit Type-2</mat-option>
-                        <mat-option value="Type-3">Unit Type-3</mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Scheme Name:</mat-label>
-                    <input type="text" matInput formControlName="v_SCHEME_NAME">
+                    <input matInput type="text" formControlName="v_DIVISION">
                 </mat-form-field>
 
                 <mat-form-field>
@@ -247,130 +273,210 @@
                 </mat-form-field>
 
                 <mat-form-field>
+                    <mat-label>Scheme Code:</mat-label>
+                    <input matInput type="text" formControlName="v_SCHEME_CODE">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Scheme Name:</mat-label>
+                    <input matInput type="text" formControlName="v_SCHEME_NAME">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of HIG Units:</mat-label>
+                    <input matInput type="text" formControlName="n_NO_OF_HIG_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of MIG Units:</mat-label>
+                    <input matInput type="text" formControlName="n_NO_OF_MIG_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of LIG Units:</mat-label>
+                    <input matInput type="text" formControlName="n_NO_OF_LIG_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of EWS Units:</mat-label>
+                    <input matInput type="text" formControlName="n_NO_OF_EWS_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total No of Residential Units:</mat-label>
+                    <input matInput type="text" formControlName="n_TOTAL_NO_OF_RESIDENTIAL_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total No of Commercial Units:</mat-label>
+                    <input matInput type="text" formControlName="n_TOTAL_NO_OF_COMMERCIAL_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of Outright Units:</mat-label>
+                    <input matInput type="text" formControlName="n_NO_OF_OUTRIGHT_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of Hirepurchase Units:</mat-label>
+                    <input matInput type="text" formControlName="n_NO_OF_HIREPURCHASE_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of SFS Units:</mat-label>
+                    <input matInput type="text" formControlName="n_NO_OF_SFS_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Scheme Type:</mat-label>
+                    <mat-select formControlName="v_SCHEME_TYPE">
+                        <mat-option value="Type-1">Scheme Type-1</mat-option>
+                        <mat-option value="Type-2">Scheme Type-2</mat-option>
+                        <mat-option value="Type-3">Scheme Type-3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
                     <mat-label>Cut off Date:</mat-label>
-                    <input matInput formControlName="v_CUT_OFF_DATE" required>
+                    <input matInput [matDatepicker]="cutOffDate" formControlName="v_CUT_OFF_DATE">
                     <mat-datepicker-toggle matIconSuffix [for]="cutOffDate"></mat-datepicker-toggle>
                     <mat-datepicker #cutOffDate></mat-datepicker>
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Final Cut off Date:</mat-label>
-                    <input matInput formControlName="d_FINAL_CUTOFF_DATE" required>
+                    <input matInput [matDatepicker]="finalCutOffDate" formControlName="v_FINAL_CUTOFF_DATE">
                     <mat-datepicker-toggle matIconSuffix [for]="finalCutOffDate"></mat-datepicker-toggle>
                     <mat-datepicker #finalCutOffDate></mat-datepicker>
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Rate of Scheme Interest:</mat-label>
-                    <input type="text" matInput formControlName="n_RATE_OF_SCHEME_INTEREST">
+                    <input matInput type="text" formControlName="n_RATE_OF_SCHEME_INTEREST">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Repayment Period:</mat-label>
-                    <input type="text" matInput formControlName="v_REPAYMENT_METHOD">
+                    <input matInput type="text" formControlName="v_REPAYMENT_PERIOD">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Selling Price:</mat-label>
-                    <input type="text" matInput formControlName="n_SELLING_PRICE">
+                    <input matInput type="text" formControlName="n_SELLING_PRICE">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Selling Extent:</mat-label>
-                    <input type="text" matInput formControlName="v_SELLING_EXTENT">
+                    <input matInput type="text" formControlName="v_SELLING_EXTENT">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Tentative Land Cost:</mat-label>
-                    <input type="text" matInput formControlName="n_TENTATIVE_LAND_COST">
+                    <input matInput type="text" formControlName="n_TENTATIVE_LAND_COST">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Final Land Cost:</mat-label>
-                    <input type="text" matInput formControlName="n_FINAL_LAND_COST">
+                    <input matInput type="text" formControlName="n_FINAL_LAND_COST">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Profit on Land:</mat-label>
-                    <input type="text" matInput formControlName="n_PROFIT_ON_LAND">
+                    <input matInput type="text" formControlName="n_PROFIT_ON_LAND">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Rate Adopted:</mat-label>
-                    <input type="text" matInput formControlName="n_RATE_ADOPTED">
+                    <input matInput type="text" formControlName="n_RATE_ADOPTED">
                 </mat-form-field>
+
                 <div class="button">
                     <button matStepperNext class="btn" style="background-color: #470A3C;color: white;">Next</button>
                 </div>
             </form>
         </mat-step>
         <mat-step [stepControl]="unitDataForm">
-            <form [formGroup]="unitDataForm" class="scheme-data-form" (ngSubmit)="onUpdate(id)">
+            <form [formGroup]="unitDataForm" class="scheme-data-form">
                 <ng-template matStepLabel>Unit Data</ng-template>
 
                 <mat-form-field>
                     <mat-label>Total Developed Units:</mat-label>
-                    <input type="text" matInput formControlName="n_TOTAL_DEVELOPED_UNITS">
+                    <input matInput type="text" formControlName="n_TOTAL_DEVELOPED_UNITS">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Total Allotted Units:</mat-label>
-                    <input type="text" matInput formControlName="n_TOTAL_ALLOTTED_UNITS">
+                    <input matInput type="text" formControlName="n_TOTAL_ALLOTTED_UNITS">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Total Alotted Units for Outright:</mat-label>
-                    <input type="text" matInput formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT">
+                    <input matInput type="text" formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Total allotted units for Hire purchase:</mat-label>
-                    <input type="text" matInput formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE">
+                    <input matInput type="text" formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total allotted units for SFS:</mat-label>
+                    <input matInput type="text" formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_SFS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total allotted units for Residential:</mat-label>
+                    <input matInput type="text" formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_RESIDENTIAL">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total allotted units for Commercial:</mat-label>
+                    <input matInput type="text" formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_COMMERCIAL">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Total Arrears EMI:</mat-label>
-                    <input type="text" matInput formControlName="n_TOTAL_ARREARS_EMI">
+                    <input matInput type="text" formControlName="n_TOTAL_ARREARS_EMI">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Total Balance EMI:</mat-label>
-                    <input type="text" matInput formControlName="n_TOTAL_BALANCE_EMI">
+                    <input matInput type="text" formControlName="n_TOTAL_BALANCE_EMI">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Total Current EMI:</mat-label>
-                    <input type="text" matInput formControlName="n_TOTAL_CURRENT_EMI">
+                    <input matInput type="text" formControlName="n_TOTAL_CURRENT_EMI">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Total Number of Sale Deed issued:</mat-label>
-                    <input type="text" matInput formControlName="n_TOTAL_NO_OF_SALE_DEED_ISSUED">
+                    <input matInput type="text" formControlName="n_TOTAL_NO_OF_SALE_DEED_ISSUED">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Total Number of Live cases for Hire:</mat-label>
-                    <input type="text" matInput formControlName="n_TOTAL_LIVE_CASES_FOR_HIRE">
+                    <input matInput type="text" formControlName="n_TOTAL_LIVE_CASES_FOR_HIRE">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Total Number of paid Cases(Sale Deed not yet issued):</mat-label>
-                    <input type="text" matInput formControlName="n_TOTAL_NO_OF_PAID_CASES">
+                    <input matInput type="text" formControlName="n_TOTAL_NO_OF_PAID_CASES">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Total Ripped unit:</mat-label>
-                    <input type="text" matInput formControlName="n_TOTAL_RIPPED_UNIT">
+                    <input matInput type="text" formControlName="n_TOTAL_RIPPED_UNIT">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Total Unsold Units:</mat-label>
-                    <input type="text" matInput formControlName="n_TOTAL_UNSOLD_UNITS">
+                    <input matInput type="text" formControlName="n_TOTAL_UNSOLD_UNITS">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Remarks:</mat-label>
-                    <input type="text" matInput formControlName="v_REMARKS">
+                    <input matInput type="text" formControlName="v_REMARKS">
                 </mat-form-field>
 
                 <div class="button">
@@ -392,28 +498,18 @@
                 <ng-template matStepLabel>Scheme Data</ng-template>
 
                 <mat-form-field>
-                    <mat-label>Scheme Code:</mat-label>
-                    <input matInput readonly noFocus formControlName="v_SCHEME_CODE">
-                </mat-form-field>
-
-                <mat-form-field>
                     <mat-label>Division:</mat-label>
                     <input matInput readonly noFocus formControlName="v_DIVISION">
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-label>Asset Category:</mat-label>
-                    <input matInput readonly noFocus formControlName="v_ASSET_CATEGORY">
+                    <mat-label>Unit Type:</mat-label>
+                    <input matInput readonly noFocus formControlName="v_UNIT_TYPE">
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-label>Asset Sub-Category:</mat-label>
-                    <input matInput readonly noFocus formControlName="v_ASSET_SUB_CATEGORY">
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Type Name:</mat-label>
-                    <input matInput readonly noFocus formControlName="v_TYPE_NAME">
+                    <mat-label>Scheme Code:</mat-label>
+                    <input matInput readonly noFocus formControlName="v_SCHEME_CODE">
                 </mat-form-field>
 
                 <mat-form-field>
@@ -422,8 +518,53 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-label>Unit Type:</mat-label>
-                    <input matInput readonly noFocus formControlName="v_UNIT_TYPE">
+                    <mat-label>No of HIG Units:</mat-label>
+                    <input matInput readonly noFocus formControlName="n_NO_OF_HIG_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of MIG Units:</mat-label>
+                    <input matInput readonly noFocus formControlName="n_NO_OF_MIG_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of LIG Units:</mat-label>
+                    <input matInput readonly noFocus formControlName="n_NO_OF_LIG_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of EWS Units:</mat-label>
+                    <input matInput readonly noFocus formControlName="n_NO_OF_EWS_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total No of Residential Units:</mat-label>
+                    <input matInput readonly noFocus formControlName="n_TOTAL_NO_OF_RESIDENTIAL_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total No of Commercial Units:</mat-label>
+                    <input matInput readonly noFocus formControlName="n_TOTAL_NO_OF_COMMERCIAL_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of Outright Units:</mat-label>
+                    <input matInput readonly noFocus formControlName="n_NO_OF_OUTRIGHT_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of Hirepurchase Units:</mat-label>
+                    <input matInput readonly noFocus formControlName="n_NO_OF_HIREPURCHASE_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>No of SFS Units:</mat-label>
+                    <input matInput readonly noFocus formControlName="n_NO_OF_SFS_UNITS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Scheme Type:</mat-label>
+                    <input matInput readonly noFocus formControlName="v_SCHEME_TYPE">
                 </mat-form-field>
 
                 <mat-form-field>
@@ -433,7 +574,7 @@
 
                 <mat-form-field>
                     <mat-label>Final Cut off Date:</mat-label>
-                    <input matInput readonly noFocus formControlName="d_FINAL_CUTOFF_DATE">
+                    <input matInput readonly noFocus formControlName="v_FINAL_CUTOFF_DATE">
                 </mat-form-field>
 
                 <mat-form-field>
@@ -443,7 +584,7 @@
 
                 <mat-form-field>
                     <mat-label>Repayment Period:</mat-label>
-                    <input matInput readonly noFocus formControlName="v_REPAYMENT_METHOD">
+                    <input matInput readonly noFocus formControlName="v_REPAYMENT_PERIOD">
                 </mat-form-field>
 
                 <mat-form-field>
@@ -475,6 +616,7 @@
                     <mat-label>Rate Adopted:</mat-label>
                     <input matInput readonly noFocus formControlName="n_RATE_ADOPTED">
                 </mat-form-field>
+
                 <div class="button">
                     <button matStepperNext class="btn" style="background-color: #470A3C;color: white;">Next</button>
                 </div>
@@ -486,22 +628,37 @@
 
                 <mat-form-field>
                     <mat-label>Total Developed Units:</mat-label>
-                    <input matInput readonly noFocus id="" formControlName="n_TOTAL_DEVELOPED_UNITS">
+                    <input matInput readonly noFocus formControlName="n_TOTAL_DEVELOPED_UNITS">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Total Allotted Units:</mat-label>
-                    <input matInput readonly noFocus id="" formControlName="n_TOTAL_ALLOTTED_UNITS">
+                    <input matInput readonly noFocus formControlName="n_TOTAL_ALLOTTED_UNITS">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Total Alotted Units for Outright:</mat-label>
-                    <input matInput readonly noFocus id="" formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT">
+                    <input matInput readonly noFocus formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT">
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Total allotted units for Hire purchase:</mat-label>
                     <input matInput readonly noFocus formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total allotted units for SFS:</mat-label>
+                    <input matInput readonly noFocus formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_SFS">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total allotted units for Residential:</mat-label>
+                    <input matInput readonly noFocus formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_RESIDENTIAL">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Total allotted units for Commercial:</mat-label>
+                    <input matInput readonly noFocus formControlName="n_TOTAL_ALLOTTED_UNITS_FOR_COMMERCIAL">
                 </mat-form-field>
 
                 <mat-form-field>
@@ -550,7 +707,7 @@
                 </mat-form-field>
 
                 <div class="button">
-                    <button matStepperPrevious class="btn" style="background-color: #470A3C;color: white;">Back</button>
+                    <button class="btn btn-light border back" matStepperPrevious>Back</button>
                 </div>
 
             </form>

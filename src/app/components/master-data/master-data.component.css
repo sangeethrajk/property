@@ -80,9 +80,32 @@ input {
     box-sizing: border-box;
 }
 
+.excel-btn {
+    color: #470A3C;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid #470A3C;
+}
+
+.excel-btn .bi-download {
+    width: 1rem;
+    margin-right: 5px;
+}
+
+.button {
+    background-color: #470A3C;
+    color: #F6F8FA;
+    font-size: 14px;
+}
+
 .table-container {
     overflow-x: auto;
     /* Enable horizontal scrolling */
     max-width: 100%;
     /* Ensure the container respects available width */
+}
+
+.table-container th {
+    background-color: #470A3C;
+    color: #ffffff;
 }
