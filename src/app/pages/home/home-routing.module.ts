@@ -11,7 +11,7 @@ const routes: Routes = [
         children: [
             { path: '', redirectTo: 'view-scheme', pathMatch: 'full' },
             { path: 'view-scheme', component: ViewSchemesComponent },
-            { path: 'create-scheme', component: CreateSchemeComponent },
+            { path: 'scheme', component: CreateSchemeComponent },
             { path: 'master-data/:units/:id', component: MasterDataComponent }
         ]
     }

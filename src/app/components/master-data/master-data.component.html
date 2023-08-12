@@ -29,23 +29,23 @@
                     </div>
                     <div class="mat-elevation-z8 table-container">
                         <table mat-table [dataSource]="unitMasterDataSource" matSort>
-                            <ng-container *ngFor="let column of displayedColumns" matColumnDef="{{ column }}">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ column }}</th>
+                            <ng-container *ngFor="let column of unitMasterTableColumns" [matColumnDef]="column.prop">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ column.display }}</th>
                                 <td mat-cell *matCellDef="let element; let rowIndex = index;"
                                     (click)="startEdit(element, rowIndex)">
-                                    <ng-container *ngIf="editedRowIndex !== rowIndex; else editMode">
-                                        {{ element[column] }}
+                                    <ng-container *ngIf="editableRowIndex !== rowIndex; else editMode">
+                                        {{ element[column.prop] }}
                                     </ng-container>
                                     <ng-template #editMode>
-                                        <input [(ngModel)]="element[column]"
+                                        <input [(ngModel)]="element[column.prop]"
                                             (keydown.enter)="saveEdit(element, rowIndex)"
                                             (keydown.esc)="cancelEdit()" />
                                     </ng-template>
                                 </td>
                             </ng-container>
 
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            <tr mat-header-row *matHeaderRowDef="unitMasterDataColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: unitMasterDataColumns;"></tr>
                         </table>
                         <mat-paginator [length]="unitMasterDataSource.data.length" [pageSizeOptions]="[5, 10, 20]"
                             showFirstLastButtons [pageSize]="pageSize" (page)="pageEvent($event)">
@@ -55,7 +55,56 @@
             </mat-tab>
             <mat-tab label="Allotee">
                 <ng-template matTabContent>
-                    Content 2
+                    <div class="button-container">
+                        <button class="btn button my-2" (click)="handleInitialAllotteeData()">Update from Unit</button>
+                        <button class="btn button my-2" (click)="sendAllotteeData()">Send</button>
+                    </div>
+                    <div class="mat-elevation-z8 table-container">
+                        <table mat-table [dataSource]="allotteeDataSource">
+                            <ng-container *ngFor="let column of allotteeTableColumns" [matColumnDef]="column.property">
+                                <th mat-header-cell *matHeaderCellDef>{{ column.display }}</th>
+                                <td mat-cell *matCellDef="let element;">
+                                    <!-- <ng-container *ngIf="editableRowIndex !== rowIndex; else editMode">
+                                        {{ element[column.property] }}
+                                    </ng-container> -->
+                                    <ng-container [ngSwitch]="column.property">
+                                        <!-- For columns with input fields -->
+                                        <ng-container *ngSwitchCase="'v_AADHAAR_DOC_PDF'">
+                                            <input type="file" [(ngModel)]="element[column.property]"
+                                                (change)="onAadhaarSelected($event)" accept=".pdf">
+                                        </ng-container>
+                                        <ng-container *ngSwitchCase="'v_OTHER_DOC_PDF'">
+                                            <input type="file" [(ngModel)]="element[column.property]"
+                                                (change)="onOtherSelected($event)" accept=".pdf">
+                                        </ng-container>
+                                        <ng-container *ngSwitchCase="'v_ALLOTTEE_PHOTO'">
+                                            <input type="file" [(ngModel)]="element[column.property]"
+                                                (change)="onAllotteePhotoSelected($event)" accept=".png, .jpg, .jpeg">
+                                        </ng-container>
+                                        <!-- For other columns -->
+                                        <ng-container *ngSwitchDefault>
+                                            <input type="text" [(ngModel)]="element[column.property]" />
+                                        </ng-container>
+
+                                        <!-- For Viewing uploaded files -->
+                                        <ng-container *ngSwitchCase="'v_AADHAAR_DOC_PDF'">
+                                            <a [href]="element[column.property]" target="_blank">View</a>
+                                        </ng-container>
+                                        <ng-container *ngSwitchCase="'v_OTHER_DOC_PDF'">
+                                            <a [href]="element[column.property]" target="_blank">View</a>
+                                        </ng-container>
+                                        <ng-container *ngSwitchCase="'v_ALLOTTEE_PHOTO'">
+                                            <a [href]="element[column.property]" target="_blank">View</a>
+                                        </ng-container>
+
+                                    </ng-container>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="allotteeColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: allotteeColumns;"></tr>
+                        </table>
+                    </div>
                 </ng-template>
             </mat-tab>
             <mat-tab label="Financial">
@@ -65,7 +114,30 @@
             </mat-tab>
             <mat-tab label="Sale Deed">
                 <ng-template matTabContent>
-                    Content 3
+                    <div class="file-container">
+                        <label for="">Allotment Order</label>
+                        <input type="file" name="" id="">
+                    </div>
+                    <div class="file-container">
+                        <label for="">LCS Agreement</label>
+                        <input type="file" name="" id="">
+                    </div>
+                    <div class="file-container">
+                        <label for="">Handing over report</label>
+                        <input type="file" name="" id="">
+                    </div>
+                    <div class="file-container">
+                        <label for="">Field measurement book</label>
+                        <input type="file" name="" id="">
+                    </div>
+                    <div class="file-container">
+                        <label for="">A & B(Loan purposes)</label>
+                        <input type="file" name="" id="">
+                    </div>
+                    <div class="file-container">
+                        <label for="">Sale Deed</label>
+                        <input type="file" name="" id="">
+                    </div>
                 </ng-template>
             </mat-tab>
         </mat-tab-group>

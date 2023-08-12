@@ -1,3 +1,7 @@
+.main-content {
+    padding: 1rem;
+}
+
 .success-icon {
     color: green;
     margin-right: 8px;
@@ -6,4 +10,9 @@
 .failure-icon {
     color: red;
     margin-right: 8px;
+}
+
+button {
+    background-color: #470A3C;
+    color: #ffffff;
 }

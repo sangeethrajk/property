@@ -1,12 +1,14 @@
-<h2 mat-dialog-title>
-    <mat-icon [ngClass]="{'success-icon': data.isSuccess, 'failure-icon': !data.isSuccess}">
-        {{ data.isSuccess ? 'check_circle' : 'cancel' }}
-    </mat-icon>
-    {{ data.isSuccess ? 'Success' : 'Failure' }}
-</h2>
-<div mat-dialog-content>
-    {{ data.message }}
-</div>
-<div mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="true" color="primary" routerLink="/property/home/view-scheme">OK</button>
+<div class="main-content">
+    <h2 mat-dialog-title class="d-flex justify-content-start">
+        <mat-icon [ngClass]="{'success-icon': data.isSuccess, 'failure-icon': !data.isSuccess}">
+            {{ data.isSuccess ? 'check_circle' : 'cancel' }}
+        </mat-icon>
+        {{ data.isSuccess ? 'Success' : 'Failure' }}
+    </h2>
+    <div mat-dialog-content>
+        {{ data.message }}
+    </div>
+    <div mat-dialog-actions>
+        <button class="btn" [mat-dialog-close]="true" [routerLink]="data.routerLink">OK</button>
+    </div>
 </div>

@@ -52,4 +52,15 @@ export class HttpService {
     return this.http.post<any>(this.apiUrl + 'saveUnitData', unitData, { headers });
   }
 
+  createAllottee(allotteeTableData: any[]): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(this.apiUrl + 'saveAllottees', allotteeTableData, { headers });
+  }
+
+  getAllAllottees(allotteeNId: number): Observable<any[]> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const requestBody = { id: allotteeNId };
+    return this.http.post<any[]>(this.apiUrl + 'getAllAllottees', requestBody, { headers });
+  }
+
 }

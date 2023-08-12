@@ -33,8 +33,7 @@
             <input type="date" id="to-date" class="date-input">
         </div>
         <div>
-            <button class="btn btn-light add-dataBtn" routerLink="/property/home/create-scheme"
-                (click)="showCreateScheme()">
+            <button class="btn btn-light add-dataBtn" routerLink="/property/home/scheme" (click)="showCreateScheme()">
                 <span><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus"
                         viewBox="0 0 16 16">
                         <path
@@ -93,9 +92,9 @@
                 <th mat-header-cell *matHeaderCellDef> Action </th>
                 <td mat-cell *matCellDef="let scheme" class="p-0">
                     <div class="d-flex justify-content-evenly">
-                        <a routerLink="/property/home/create-scheme" (click)="showViewScheme(scheme.n_ID)"
+                        <a routerLink="/property/home/scheme" (click)="showViewScheme(scheme.n_ID)"
                             style="color: #470A3C;"><span class="material-symbols-rounded">visibility</span></a>
-                        <a routerLink="/property/home/create-scheme" (click)="showEditScheme(scheme.n_ID)"
+                        <a routerLink="/property/home/scheme" (click)="showEditScheme(scheme.n_ID)"
                             style="color: #470A3C;"><span class="material-symbols-rounded">edit</span></a>
                     </div>
                 </td>
