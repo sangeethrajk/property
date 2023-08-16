@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import * as XLSX from 'xlsx';
 import { SchemesData } from '../components/view-schemes/view-schemes.component';
 import { UnitData } from '../components/master-data/master-data.component';
 
@@ -57,10 +58,31 @@ export class HttpService {
     return this.http.post<any>(this.apiUrl + 'saveAllottees', allotteeTableData, { headers });
   }
 
-  getAllAllottees(allotteeNId: number): Observable<any[]> {
+  getAllAllottees(schemeId: number): Observable<any[]> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const requestBody = { id: allotteeNId };
-    return this.http.post<any[]>(this.apiUrl + 'getAllAllottees', requestBody, { headers });
+    const requestBody = { nSchemeId: schemeId };
+    return this.http.post<any[]>(this.apiUrl + 'getAllotteesBySchemeId', requestBody, { headers });
+  }
+
+  updateAllotteeData(updatedAllotteeData: any[]): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any[]>(this.apiUrl + 'saveAllottees', updatedAllotteeData, { headers });
+  }
+
+  uploadSaleDeedFiles(saleDeedFiles: any[]): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(this.apiUrl + 'saveSalesDeed', saleDeedFiles, { headers });
+  }
+
+  getSalesDeedFiles(schemeId: number): Observable<any[]> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const requestBody = { id: schemeId };
+    return this.http.post<any[]>(this.apiUrl + 'getAllSalesDeed', requestBody, { headers });
+  }
+
+  updateSaleDeedFiles(updatedsaleDeedFiles: any[]): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any[]>(this.apiUrl + 'saveSalesDeed', updatedsaleDeedFiles, { headers });
   }
 
 }

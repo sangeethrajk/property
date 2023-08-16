@@ -51,7 +51,7 @@ export class CreateSchemeComponent implements OnInit {
     this.schemeFormGroup = this.formBuilder.group({
       v_DIVISION: ['', Validators.required],
       v_UNIT_TYPE: ['', Validators.required],
-      v_SCHEME_CODE: ['', Validators.required],
+      v_SCHEME_CODE: [''],
       v_SCHEME_NAME: ['', Validators.required],
       n_NO_OF_HIG_UNITS: ['', Validators.required],
       n_NO_OF_MIG_UNITS: ['', Validators.required],
@@ -62,7 +62,6 @@ export class CreateSchemeComponent implements OnInit {
       n_NO_OF_OUTRIGHT_UNITS: ['', Validators.required],
       n_NO_OF_HIREPURCHASE_UNITS: ['', Validators.required],
       n_NO_OF_SFS_UNITS: ['', Validators.required],
-      v_SCHEME_TYPE: ['', Validators.required],
       v_CUT_OFF_DATE: ['', Validators.required],
       v_FINAL_CUTOFF_DATE: ['', Validators.required],
       n_RATE_OF_SCHEME_INTEREST: ['', Validators.required],
@@ -76,22 +75,22 @@ export class CreateSchemeComponent implements OnInit {
     });
 
     this.unitFormGroup = this.formBuilder.group({
-      n_TOTAL_DEVELOPED_UNITS: ['', Validators.required],
-      n_TOTAL_ALLOTTED_UNITS: ['', Validators.required],
-      n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT: ['', Validators.required],
-      n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE: ['', Validators.required],
-      n_TOTAL_ALLOTTED_UNITS_FOR_SFS: ['', Validators.required],
-      n_TOTAL_ALLOTTED_UNITS_FOR_RESIDENTIAL: ['', Validators.required],
-      n_TOTAL_ALLOTTED_UNITS_FOR_COMMERCIAL: ['', Validators.required],
-      n_TOTAL_ARREARS_EMI: ['', Validators.required],
-      n_TOTAL_BALANCE_EMI: ['', Validators.required],
-      n_TOTAL_CURRENT_EMI: ['', Validators.required],
-      n_TOTAL_NO_OF_SALE_DEED_ISSUED: ['', Validators.required],
-      n_TOTAL_LIVE_CASES_FOR_HIRE: ['', Validators.required],
-      n_TOTAL_NO_OF_PAID_CASES: ['', Validators.required],
-      n_TOTAL_RIPPED_UNIT: ['', Validators.required],
-      n_TOTAL_UNSOLD_UNITS: ['', Validators.required],
-      v_REMARKS: ['', Validators.required],
+      n_TOTAL_DEVELOPED_UNITS: [''],
+      n_TOTAL_ALLOTTED_UNITS: [''],
+      n_TOTAL_ALLOTTED_UNITS_FOR_OUTRIGHT: [''],
+      n_TOTAL_ALLOTTED_UNITS_FOR_HIRE_PURCHASE: [''],
+      n_TOTAL_ALLOTTED_UNITS_FOR_SFS: [''],
+      n_TOTAL_ALLOTTED_UNITS_FOR_RESIDENTIAL: [''],
+      n_TOTAL_ALLOTTED_UNITS_FOR_COMMERCIAL: [''],
+      n_TOTAL_ARREARS_EMI: [''],
+      n_TOTAL_BALANCE_EMI: [''],
+      n_TOTAL_CURRENT_EMI: [''],
+      n_TOTAL_NO_OF_SALE_DEED_ISSUED: [''],
+      n_TOTAL_LIVE_CASES_FOR_HIRE: [''],
+      n_TOTAL_NO_OF_PAID_CASES: [''],
+      n_TOTAL_RIPPED_UNIT: [''],
+      n_TOTAL_UNSOLD_UNITS: [''],
+      v_REMARKS: [''],
     });
 
     this.id = this.idPassService.getN_ID();
@@ -111,7 +110,6 @@ export class CreateSchemeComponent implements OnInit {
       n_NO_OF_OUTRIGHT_UNITS: new FormControl(),
       n_NO_OF_HIREPURCHASE_UNITS: new FormControl(),
       n_NO_OF_SFS_UNITS: new FormControl(),
-      v_SCHEME_TYPE: new FormControl(),
       v_CUT_OFF_DATE: new FormControl(),
       v_FINAL_CUTOFF_DATE: new FormControl(),
       n_RATE_OF_SCHEME_INTEREST: new FormControl(),
@@ -141,28 +139,76 @@ export class CreateSchemeComponent implements OnInit {
       n_TOTAL_UNSOLD_UNITS: new FormControl(),
       v_REMARKS: new FormControl(),
     });
+
+  }
+
+  validateCounts() {
+    const assetSubCategory =
+      this.schemeFormGroup.value.n_NO_OF_HIG_UNITS +
+      this.schemeFormGroup.value.n_NO_OF_MIG_UNITS +
+      this.schemeFormGroup.value.n_NO_OF_LIG_UNITS +
+      this.schemeFormGroup.value.n_NO_OF_EWS_UNITS;
+    const assetType =
+      this.schemeFormGroup.value.n_TOTAL_NO_OF_RESIDENTIAL_UNITS +
+      this.schemeFormGroup.value.n_TOTAL_NO_OF_COMMERCIAL_UNITS;
+
+    const schemeType =
+      this.schemeFormGroup.value.n_NO_OF_OUTRIGHT_UNITS +
+      this.schemeFormGroup.value.n_NO_OF_HIREPURCHASE_UNITS +
+      this.schemeFormGroup.value.n_NO_OF_SFS_UNITS;
+
+    if (assetSubCategory === assetType && assetSubCategory === schemeType) {
+      alert('The total count is matched');
+      return true;
+    } else {
+      alert('The total counts do not match. Please ensure the counts are correct.');
+      return false;
+    }
   }
 
   onSubmit() {
-
-    if (this.schemeFormGroup.valid && this.unitFormGroup.valid) {
-      const schemeData = {
-        ...this.schemeFormGroup.value,
-        ...this.unitFormGroup.value,
-      };
-
-      this.http.createSchemeData([schemeData]).subscribe(
-        (response) => {
-          // Handle the successful response here if needed
-          console.log('Successfully created scheme data:', response);
-          this.openDialog(true, 'Scheme data created successfully!');
-        },
-        (error) => {
-          // Handle errors here if needed
-          console.error('Error creating scheme data:', error);
-          this.openDialog(false, 'Error creating scheme data. Please try again later.');
+    if (this.schemeFormGroup.valid && this.unitFormGroup && this.validateCounts()) {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        width: '500px',
+        data: {
+          message: 'Are you sure you want to create this scheme?',
+          confirmBackgroundColor: 'green',
+          cancelBackgroundColor: 'red',
+          confirmTextColor: 'white',
+          cancelTextColor: 'white',
+          confirmText: 'Yes',
+          cancelText: 'No'
         }
-      );
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === true) {
+          this.loader.start();
+          const schemeData = {
+            ...this.schemeFormGroup.value,
+            ...this.unitFormGroup.value,
+          };
+
+          this.http.createSchemeData([schemeData]).subscribe(
+            (response) => {
+              this.loader.stop();
+              console.log('Successfully created scheme data:', response);
+              this.dialog.open(DialogMsgComponent, {
+                data: {
+                  isSuccess: true,
+                  message: 'Scheme data created successfully!',
+                  routerLink: '/property/home/view-scheme'
+                }
+              });
+            },
+            (error) => {
+              this.loader.stop();
+              console.error('Error creating scheme data:', error);
+              this.openDialog(false, 'Error creating scheme data. Please try again later.');
+            }
+          );
+        }
+      });
     }
   }
 
@@ -252,8 +298,10 @@ export class CreateSchemeComponent implements OnInit {
     this.subscription = this.http.getSchemeDataById(this.id)
       .subscribe((response) => {
         const data = response.data;
-        const formattedCutOffDate = this.datePipe.transform(data.v_CUT_OFF_DATE, 'dd/MM/yyyy');
-        const formattedFinalCutOffDate = this.datePipe.transform(data.d_FINAL_CUTOFF_DATE, 'dd/MM/yyyy');
+        const formattedCutOffDate = new Date(data.v_CUT_OFF_DATE).toLocaleDateString();
+        const formattedFinalCutOffDate = new Date(data.v_FINAL_CUTOFF_DATE).toLocaleDateString();
+        console.log(formattedCutOffDate);
+        console.log(formattedFinalCutOffDate);
         this.schemeDataForm.patchValue({
           v_DIVISION: data.v_DIVISION,
           v_UNIT_TYPE: data.v_UNIT_TYPE,

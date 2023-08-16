@@ -12,8 +12,6 @@ export interface SchemesData {
   v_DIVISION: string;
   v_SCHEME_CODE: Date;
   v_SCHEME_NAME: string;
-  v_ASSET_SUB_CATEGORY: string;
-  v_ASSET_TYPE: string;
   n_TOTAL_DEVELOPED_UNITS: string;
   ACTION: any;
   MASTER_DATA: any;
@@ -28,7 +26,7 @@ export class ViewSchemesComponent implements OnInit {
 
   allSchemesDataSource = new MatTableDataSource<any>([]);
   schemesData!: SchemesData[];
-  schemesTableColumns: string[] = ['n_ID', 'v_DIVISION', 'v_SCHEME_CODE', 'v_SCHEME_NAME', 'v_ASSET_SUB_CATEGORY', 'v_ASSET_TYPE', 'n_TOTAL_DEVELOPED_UNITS', 'ACTION', 'MASTER_DATA'];
+  schemesTableColumns: string[] = ['n_ID', 'v_DIVISION', 'v_SCHEME_CODE', 'v_SCHEME_NAME', 'n_TOTAL_DEVELOPED_UNITS', 'ACTION', 'MASTER_DATA'];
   id: any;
 
   @ViewChild(MatPaginator) paginatior !: MatPaginator;
