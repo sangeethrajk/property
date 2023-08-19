@@ -4,6 +4,7 @@ import { CreateSchemeComponent } from 'src/app/components/create-scheme/create-s
 import { HomeComponent } from './home.component';
 import { ViewSchemesComponent } from 'src/app/components/view-schemes/view-schemes.component';
 import { MasterDataComponent } from 'src/app/components/master-data/master-data.component';
+import { FinanceDetailsComponent } from 'src/app/components/finance-details/finance-details.component';
 
 const routes: Routes = [
     {
@@ -12,7 +13,8 @@ const routes: Routes = [
             { path: '', redirectTo: 'view-scheme', pathMatch: 'full' },
             { path: 'view-scheme', component: ViewSchemesComponent },
             { path: 'scheme', component: CreateSchemeComponent },
-            { path: 'master-data/:units/:id', component: MasterDataComponent }
+            { path: 'master-data/:units/:id', component: MasterDataComponent },
+            { path: 'finance/:id', component: FinanceDetailsComponent }
         ]
     }
 ];

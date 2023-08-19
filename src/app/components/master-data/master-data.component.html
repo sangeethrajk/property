@@ -46,7 +46,7 @@
                                             <!-- Your regular input field for editing -->
                                             <input [(ngModel)]="element[column.prop]"
                                                 (keydown.enter)="saveEdit(element, rowIndex)"
-                                                (keydown.esc)="cancelEdit()" />
+                                                (keydown.esc)="cancelEdit()">
                                         </ng-container>
                                         <ng-template #editFields>
                                             <ng-container *ngIf="column.prop === 'v_TYPE_NAME'">
@@ -99,11 +99,11 @@
                 <ng-template matTabContent>
                     <div class="d-flex justify-content-between">
                         <button class="btn button my-2" (click)="handleInitialAllotteeData()">Update from Unit</button>
-                        <button class="btn button my-2" (click)="sendAllotteeData()">Send</button>
+                        <!-- <button class="btn button my-2" (click)="sendAllotteeData()">Send</button> -->
                         <button class="btn button my-2" (click)="updateAllotteeData()">Update</button>
                     </div>
                     <div class="mat-elevation-z8 table-container">
-                        <table mat-table [dataSource]="allotteeDataSource">
+                        <table mat-table [dataSource]="allotteeDataSource" class="allottee-table">
                             <ng-container *ngFor="let column of allotteeTableColumns" [matColumnDef]="column.property">
                                 <th mat-header-cell *matHeaderCellDef>{{ column.display }}</th>
                                 <td mat-cell *matCellDef="let element;">
@@ -111,6 +111,11 @@
                                         <!-- For other columns -->
                                         <ng-container *ngSwitchDefault>
                                             <input type="text" [(ngModel)]="element[column.property]" />
+                                        </ng-container>
+
+                                        <ng-container *ngSwitchCase="'n_PHONE_NUMBER'">
+                                            <input type="number" pattern="[1-9]{1}[0-9]{9}" maxlength="10"
+                                                [(ngModel)]="element[column.property]" />
                                         </ng-container>
 
                                         <ng-container *ngSwitchCase="'nschemeId'">
@@ -180,14 +185,166 @@
             </mat-tab>
             <mat-tab label="Financial">
                 <ng-template matTabContent>
-                    Content 3
+                    <div class="mat-elevation-z8 table-container">
+                        <table mat-table [dataSource]="financeDataSource" class="finance-table">
+
+                            <!-- S.No. Column -->
+                            <ng-container matColumnDef="sno">
+                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                <td mat-cell *matCellDef="let element"> {{element.sno}} </td>
+                            </ng-container>
+
+                            <!-- Scheme ID Column -->
+                            <ng-container matColumnDef="V_SCHEME_ID">
+                                <th mat-header-cell *matHeaderCellDef> Scheme ID </th>
+                                <td mat-cell *matCellDef="let element"> {{element.V_SCHEME_ID}} </td>
+                            </ng-container>
+
+                            <!-- Unit ID Column -->
+                            <ng-container matColumnDef="V_UNIT_ID">
+                                <th mat-header-cell *matHeaderCellDef> Unit ID </th>
+                                <td mat-cell *matCellDef="let element"> {{element.V_UNIT_ID}} </td>
+                            </ng-container>
+
+                            <!-- Unit Selling Cost Column -->
+                            <ng-container matColumnDef="V_UNIT_SELLING_COST">
+                                <th mat-header-cell *matHeaderCellDef> Unit Selling Cost </th>
+                                <td mat-cell *matCellDef="let element"> {{element.V_UNIT_SELLING_COST}} </td>
+                            </ng-container>
+
+                            <!-- Tentative Land Cost Column -->
+                            <ng-container matColumnDef="V_TENTATIVE_LAND_COST">
+                                <th mat-header-cell *matHeaderCellDef> Tentative Land Cost </th>
+                                <td mat-cell *matCellDef="let element"> {{element.V_TENTATIVE_LAND_COST}} </td>
+                            </ng-container>
+
+                            <!-- Final Land Cost Column -->
+                            <ng-container matColumnDef="V_FINAL_LAND_COST">
+                                <th mat-header-cell *matHeaderCellDef> Final Land Cost </th>
+                                <td mat-cell *matCellDef="let element"> {{element.V_FINAL_LAND_COST}} </td>
+                            </ng-container>
+
+                            <!-- Allotment Data Column -->
+                            <ng-container matColumnDef="V_ALLOTTMENT_DATE">
+                                <th mat-header-cell *matHeaderCellDef> Allotment Data </th>
+                                <td mat-cell *matCellDef="let element"> {{element.V_ALLOTTMENT_DATE}} </td>
+                            </ng-container>
+
+                            <!-- Firm Cost Column -->
+                            <ng-container matColumnDef="V_FIRM_COST">
+                                <th mat-header-cell *matHeaderCellDef> Firm Cost </th>
+                                <td mat-cell *matCellDef="let element"> {{element.V_FIRM_COST}} </td>
+                            </ng-container>
+
+                            <!-- Freezed Rate Column -->
+                            <ng-container matColumnDef="N_FREEZED_RATE">
+                                <th mat-header-cell *matHeaderCellDef> Freezed Rate </th>
+                                <td mat-cell *matCellDef="let element"> {{element.N_FREEZED_RATE}} </td>
+                            </ng-container>
+
+                            <!-- Initial Deposit Column -->
+                            <ng-container matColumnDef="N_INITIAL_DEPOSIT">
+                                <th mat-header-cell *matHeaderCellDef> Initial Deposit </th>
+                                <td mat-cell *matCellDef="let element"> {{element.N_INITIAL_DEPOSIT}} </td>
+                            </ng-container>
+
+                            <!-- Monthly Installment Column -->
+                            <ng-container matColumnDef="N_MONTHLY_INSTALLMENT">
+                                <th mat-header-cell *matHeaderCellDef> Monthly Installment </th>
+                                <td mat-cell *matCellDef="let element"> {{element.N_MONTHLY_INSTALLMENT}} </td>
+                            </ng-container>
+
+                            <!-- Difference in Selling Cost Left-out Column -->
+                            <ng-container matColumnDef="V_DIFFERENCE_IN_SELLING_COST_LEFT_OUT_IF_ANY">
+                                <th mat-header-cell *matHeaderCellDef> Difference in Selling Cost Left-out </th>
+                                <td mat-cell *matCellDef="let element">
+                                    {{element.V_DIFFERENCE_IN_SELLING_COST_LEFT_OUT_IF_ANY}} </td>
+                            </ng-container>
+
+                            <!-- Interest on Left-out from Ready for Occupation Column -->
+                            <ng-container matColumnDef="V_INTEREST_ON_LEFT_OUT_FROM_THE_READY_FOR_OCCUPATION">
+                                <th mat-header-cell *matHeaderCellDef> Interest on Left-out from Ready for Occupation
+                                </th>
+                                <td mat-cell *matCellDef="let element">
+                                    {{element.V_INTEREST_ON_LEFT_OUT_FROM_THE_READY_FOR_OCCUPATION}} </td>
+                            </ng-container>
+
+                            <!-- Difference in Land Cost as on Allotment Column -->
+                            <ng-container matColumnDef="V_DIFFERENCE_IN_LAND_COST_AS_ON_ALLOTTMENT">
+                                <th mat-header-cell *matHeaderCellDef> Difference in Land Cost as on Allotment </th>
+                                <td mat-cell *matCellDef="let element">
+                                    {{element.V_DIFFERENCE_IN_LAND_COST_AS_ON_ALLOTTMENT}} </td>
+                            </ng-container>
+
+                            <!-- Interest on Difference in Land Cost Column -->
+                            <ng-container matColumnDef="V_INTEREST_ON_DIFFERENCE_IN_LANDCOST">
+                                <th mat-header-cell *matHeaderCellDef> Interest on Difference in Land Cost </th>
+                                <td mat-cell *matCellDef="let element"> {{element.V_INTEREST_ON_DIFFERENCE_IN_LANDCOST}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Rate of Interest Column -->
+                            <ng-container matColumnDef="V_RATE_OF_INTEREST">
+                                <th mat-header-cell *matHeaderCellDef> Rate of Interest </th>
+                                <td mat-cell *matCellDef="let element"> {{element.V_RATE_OF_INTEREST}} </td>
+                            </ng-container>
+
+                            <!-- Payment Period in years Column -->
+                            <ng-container matColumnDef="V_PAYMENT_PERIOD_IN_YEARS">
+                                <th mat-header-cell *matHeaderCellDef> Payment Period in years </th>
+                                <td mat-cell *matCellDef="let element"> {{element.V_PAYMENT_PERIOD_IN_YEARS}} </td>
+                            </ng-container>
+
+                            <!-- Interest on Principle Amount Column -->
+                            <ng-container matColumnDef="V_INTEREST_ON_PRINCIPAL_AMOUNT">
+                                <th mat-header-cell *matHeaderCellDef> Interest on Principle Amount </th>
+                                <td mat-cell *matCellDef="let element"> {{element.V_INTEREST_ON_PRINCIPAL_AMOUNT}} </td>
+                            </ng-container>
+
+                            <!-- Principal Amount Column -->
+                            <ng-container matColumnDef="V_PRINCIPAL_AMOUNT">
+                                <th mat-header-cell *matHeaderCellDef> Principal Amount </th>
+                                <td mat-cell *matCellDef="let element"> {{element.V_PRINCIPAL_AMOUNT}} </td>
+                            </ng-container>
+
+                            <!-- EMI Due Date Column -->
+                            <ng-container matColumnDef="V_EMI_DUE_DATE">
+                                <th mat-header-cell *matHeaderCellDef> EMI Due Date </th>
+                                <td mat-cell *matCellDef="let element"> {{element.V_EMI_DUE_DATE}} </td>
+                            </ng-container>
+
+                            <!-- Initial Deposit Due Date Column -->
+                            <ng-container matColumnDef="V_ID_DUE_DATE">
+                                <th mat-header-cell *matHeaderCellDef> Initial Deposit Due Date </th>
+                                <td mat-cell *matCellDef="let element"> {{element.V_ID_DUE_DATE}} </td>
+                            </ng-container>
+
+                            <!-- Action Column -->
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef> Action </th>
+                                <td mat-cell *matCellDef="let element"> <button
+                                        [routerLink]="['/property/home/finance',element.V_UNIT_ID ]"
+                                        class="btn button">View</button>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="financeTableColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: financeTableColumns;"></tr>
+                        </table>
+
+                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                            aria-label="Select page of periodic elements">
+                        </mat-paginator>
+                    </div>
                 </ng-template>
             </mat-tab>
             <mat-tab label="Sale Deed">
                 <ng-template matTabContent>
-                    <!-- <button class="btn button my-2" (click)="handleInitialSalesData()">Update from Unit Data</button> -->
-                    <button class="btn button my-2" (click)="uploadSaleDeedFiles()">Upload</button>
-                    <button class="btn button my-2" (click)="updateSaleDeedFiles()">Update</button>
+                    <div class="d-flex justify-content-between">
+                        <button class="btn button my-2" (click)="getInitialSalesData()">Update from Unit Data</button>
+                        <!-- <button class="btn button my-2" (click)="uploadSaleDeedFiles()">Upload</button> -->
+                        <button class="btn button my-2" (click)="updateSaleDeedFiles()">Update</button>
+                    </div>
                     <!-- <mat-form-field>
                         <mat-label>Filter</mat-label>
                         <input matInput placeholder="Ex. Mia" #saleDeedinput>

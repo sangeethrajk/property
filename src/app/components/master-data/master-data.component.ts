@@ -55,6 +55,9 @@ export interface AllotteeData {
   v_OTHER_FILE_NAME: string;
   v_AADHAAR_FILE_NAME: string;
   v_ALLOTTE_FILE_NAME: string;
+  v_AADHAAR_FILE: string;
+  v_ALLOTTE_FILE: string;
+  v_OTHER_FILE: string;
 }
 
 export interface SaleDeed {
@@ -83,6 +86,30 @@ export interface SaleDeed {
   saleDeedFilePath: string;
 }
 
+export interface FinanceData {
+  sno: number;
+  V_SCHEME_ID: string;
+  V_UNIT_ID: string;
+  V_UNIT_SELLING_COST: number;
+  V_TENTATIVE_LAND_COST: number;
+  V_FINAL_LAND_COST: number;
+  V_ALLOTTMENT_DATE: string;
+  V_FIRM_COST: number;
+  N_FREEZED_RATE: number;
+  N_INITIAL_DEPOSIT: number;
+  N_MONTHLY_INSTALLMENT: number;
+  V_DIFFERENCE_IN_SELLING_COST_LEFT_OUT_IF_ANY: number;
+  V_INTEREST_ON_LEFT_OUT_FROM_THE_READY_FOR_OCCUPATION: number;
+  V_DIFFERENCE_IN_LAND_COST_AS_ON_ALLOTTMENT: number;
+  V_INTEREST_ON_DIFFERENCE_IN_LANDCOST: number;
+  V_RATE_OF_INTEREST: number;
+  V_PAYMENT_PERIOD_IN_YEARS: number;
+  V_INTEREST_ON_PRINCIPAL_AMOUNT: number;
+  V_PRINCIPAL_AMOUNT: number;
+  V_EMI_DUE_DATE: string;
+  V_ID_DUE_DATE: string;
+}
+
 @Component({
   selector: 'app-master-data',
   templateUrl: './master-data.component.html',
@@ -99,6 +126,7 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
   unitMasterDataSource: MatTableDataSource<UnitData> = new MatTableDataSource<UnitData>();
   allotteeDataSource: MatTableDataSource<AllotteeData> = new MatTableDataSource<AllotteeData>();
   saleDeedDataSource: MatTableDataSource<SaleDeed> = new MatTableDataSource<SaleDeed>();
+  financeDataSource: MatTableDataSource<FinanceData> = new MatTableDataSource<FinanceData>();
   unitMasterTableColumns: any[] = [
     { prop: 'sno', display: 'S.No.' },
     { prop: 'n_SCHEME_ID', display: 'Scheme ID' },
@@ -146,7 +174,32 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
 
   editableRowIndex: number | null = null;
 
-  saleDeedColumns: string[] = ['sno', 'nschemeId', 'nunitId', 'nallotteeId', 'allotmentOrder', 'lcs', 'handingOverReport', 'fieldMeasurementBook', 'abLoan', 'saleDeed']
+  saleDeedColumns: string[] = ['sno', 'nschemeId', 'nunitId', 'allotmentOrder', 'lcs', 'handingOverReport', 'fieldMeasurementBook', 'abLoan', 'saleDeed']
+
+  financeTableColumns: string[] = [
+    'sno',
+    'V_SCHEME_ID',
+    'V_UNIT_ID',
+    'V_UNIT_SELLING_COST',
+    'V_TENTATIVE_LAND_COST',
+    'V_FINAL_LAND_COST',
+    'V_ALLOTTMENT_DATE',
+    'V_FIRM_COST',
+    'N_FREEZED_RATE',
+    'N_INITIAL_DEPOSIT',
+    'N_MONTHLY_INSTALLMENT',
+    'V_DIFFERENCE_IN_SELLING_COST_LEFT_OUT_IF_ANY',
+    'V_INTEREST_ON_LEFT_OUT_FROM_THE_READY_FOR_OCCUPATION',
+    'V_DIFFERENCE_IN_LAND_COST_AS_ON_ALLOTTMENT',
+    'V_INTEREST_ON_DIFFERENCE_IN_LANDCOST',
+    'V_RATE_OF_INTEREST',
+    'V_PAYMENT_PERIOD_IN_YEARS',
+    'V_INTEREST_ON_PRINCIPAL_AMOUNT',
+    'V_PRINCIPAL_AMOUNT',
+    'V_EMI_DUE_DATE',
+    'V_ID_DUE_DATE',
+    'action'
+  ];
 
   pageSize = 10;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -173,9 +226,15 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
     }
 
     this.getAllAllotteeData(this.schemeId);
-    this.getInitialSalesData(this.schemeId);
+    this.getInitialSalesData();
     this.getSalesDeedFiles(this.schemeId);
+    this.financeDataSource.data = this.data;
   }
+
+  data: FinanceData[] = [
+    { sno: 1, V_SCHEME_ID: 'A1', V_UNIT_ID: '101', V_UNIT_SELLING_COST: 100000, V_TENTATIVE_LAND_COST: 150000, V_FINAL_LAND_COST: 180000, V_ALLOTTMENT_DATE: '2023-08-15', V_FIRM_COST: 95000, N_FREEZED_RATE: 7, N_INITIAL_DEPOSIT: 20000, N_MONTHLY_INSTALLMENT: 5000, V_DIFFERENCE_IN_SELLING_COST_LEFT_OUT_IF_ANY: 5000, V_INTEREST_ON_LEFT_OUT_FROM_THE_READY_FOR_OCCUPATION: 600, V_DIFFERENCE_IN_LAND_COST_AS_ON_ALLOTTMENT: 3000, V_INTEREST_ON_DIFFERENCE_IN_LANDCOST: 450, V_RATE_OF_INTEREST: 8, V_PAYMENT_PERIOD_IN_YEARS: 5, V_INTEREST_ON_PRINCIPAL_AMOUNT: 700, V_PRINCIPAL_AMOUNT: 75000, V_EMI_DUE_DATE: '2023-09-01', V_ID_DUE_DATE: '2023-08-25' },
+    // Add more data objects as needed
+  ];
 
   populateInitialRows(schemeId: number) {
     this.http.getSchemeDataById(schemeId).subscribe(
@@ -539,7 +598,11 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
         v_ALLOTTE_FILE_PATH: '',
         v_OTHER_FILE_NAME: '',
         v_AADHAAR_FILE_NAME: '',
-        v_ALLOTTE_FILE_NAME: ''
+        v_ALLOTTE_FILE_NAME: '',
+        v_AADHAAR_FILE: '',
+        v_ALLOTTE_FILE: '',
+        v_OTHER_FILE: '',
+
       };
 
       this.allotteeDataSource.data.push(newDataForTable2);
@@ -723,37 +786,41 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(async result => {
       if (result === true) {
         this.loader.start();
-        const base64Aadhaar = await this.readFileAsBase64(this.selectedAadhaarFile);
-        const base64Other = await this.readFileAsBase64(this.selectedOtherFile);
-        const base64AllotteePhoto = await this.readFileAsBase64(this.selectedAllotteePhoto);
+        const promises: Promise<string>[] = [];
+
+        if (this.selectedAadhaarFile) {
+          promises.push(this.readFileAsBase64(this.selectedAadhaarFile));
+        }
+
+        if (this.selectedOtherFile) {
+          promises.push(this.readFileAsBase64(this.selectedOtherFile));
+        }
+
+        if (this.selectedAllotteePhoto) {
+          promises.push(this.readFileAsBase64(this.selectedAllotteePhoto));
+        }
+
+        const [base64Aadhaar, base64Other, base64AllotteePhoto] = await Promise.all(promises);
 
         const updatedAllotteeData: AllotteeData[] = this.allotteeDataSource.data.map(item => {
-          return {
-            nschemeId: item.nschemeId,
-            nunitId: item.nunitId,
-            nid: item.nid,
-            v_ALLOTTEE_NO: item.v_ALLOTTEE_NO,
-            d_ALLOTTEE_DATE: item.d_ALLOTTEE_DATE,
-            v_ALLOTTEE_NAME: item.v_ALLOTTEE_NAME,
-            v_FATHER_SPOUSE_NAME: item.v_FATHER_SPOUSE_NAME,
-            n_PHONE_NUMBER: item.n_PHONE_NUMBER,
-            emailid: item.emailid,
-            n_AADHAAR_NO: item.n_AADHAAR_NO,
-            v_AADHAAR_DOC_PDF: item.v_AADHAAR_DOC_PDF,
-            v_OTHER_DOC_NAME: item.v_OTHER_DOC_NAME,
-            v_OTHER_DOC_NUMBER: item.v_OTHER_DOC_NUMBER,
-            v_OTHER_DOC_PDF: item.v_OTHER_DOC_PDF,
-            v_ALLOTTEE_PHOTO: item.v_ALLOTTEE_PHOTO,
-            v_AADHAAR_FILE_PATH: item.v_AADHAAR_FILE_PATH,
-            v_OTHER_FILE_PATH: item.v_OTHER_FILE_PATH,
-            v_ALLOTTE_FILE_PATH: item.v_ALLOTTE_FILE_PATH,
-            v_AADHAAR_FILE: this.removeDataPrefix(base64Aadhaar),
-            v_AADHAAR_FILE_NAME: this.selectedAadhaarFile.name,
-            v_OTHER_FILE: this.removeDataPrefix(base64Other),
-            v_OTHER_FILE_NAME: this.selectedOtherFile.name,
-            v_ALLOTTE_FILE: this.removeDataPrefix(base64AllotteePhoto),
-            v_ALLOTTE_FILE_NAME: this.selectedAllotteePhoto.name,
-          };
+          const updatedItem: AllotteeData = { ...item }; // Create a copy of the current item
+
+          if (this.selectedAadhaarFile) {
+            updatedItem.v_AADHAAR_FILE = this.removeDataPrefix(base64Aadhaar);
+            updatedItem.v_AADHAAR_FILE_NAME = this.selectedAadhaarFile.name;
+          }
+
+          if (this.selectedOtherFile) {
+            updatedItem.v_OTHER_FILE = this.removeDataPrefix(base64Other);
+            updatedItem.v_OTHER_FILE_NAME = this.selectedOtherFile.name;
+          }
+
+          if (this.selectedAllotteePhoto) {
+            updatedItem.v_ALLOTTE_FILE = this.removeDataPrefix(base64AllotteePhoto);
+            updatedItem.v_ALLOTTE_FILE_NAME = this.selectedAllotteePhoto.name;
+          }
+
+          return updatedItem;
         });
 
         console.log("updatedAllotteeData", updatedAllotteeData);
@@ -787,118 +854,82 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
     });
   }
 
-  //Sale Deed
-  // handleInitialSalesData() {
-  //   this.unitMasterDataSource.data.forEach(({ v_UNIT_ALLOTTED_STATUS, n_ID, n_SCHEME_ID }) => {
-  //     const isAllotted = v_UNIT_ALLOTTED_STATUS === 'yes';
-  //     const isProcessed = this.processedUnitIDs.has(n_ID);
+  // Sale Deed
+  processedUnitIDsForSales = new Set<number>();
+  getInitialSalesData() {
+    this.unitMasterDataSource.data.forEach(({ v_UNIT_ALLOTTED_STATUS, n_ID, n_SCHEME_ID }) => {
+      const isAllotted = v_UNIT_ALLOTTED_STATUS === 'yes';
+      const isProcessed = this.processedUnitIDsForSales.has(n_ID);
 
-  //     if (isAllotted && !isProcessed) {
-  //       this.checkSalesData(n_ID, n_SCHEME_ID);
-  //       this.processedUnitIDs.add(n_ID);
-  //     }
-  //   });
-  // }
-
-  // checkSalesData(n_ID: number, n_SCHEME_ID: number) {
-  //   let isSalesDataExists = false;
-
-  //   for (const item of this.allotteeDataSource.data) {
-  //     if (item.nunitId === n_ID) {
-  //       isSalesDataExists = true;
-  //       break;
-  //     }
-  //   }
-
-  //   if (isSalesDataExists) {
-  //     console.log('Allottee data already exists for unit:', n_ID);
-  //   } else {
-  //     console.log('Allottee data does not exist for unit:', n_ID);
-  //     this.handleYesForSales(n_ID, n_SCHEME_ID);
-  //   }
-  // }
-
-  // handleYesForSales(n_ID: number, n_SCHEME_ID: number) {
-  //   const selectedItem = this.unitMasterDataSource.data.find(item => item.n_ID === n_ID && item.n_SCHEME_ID === n_SCHEME_ID);
-
-  //   if (!selectedItem) {
-  //     return; 
-  //   }
-
-  //   const isAlreadyProcessed = this.processedUnitIDs.has(selectedItem.n_ID);
-  //   const allotteeExists = this.allotteeDataSource.data.some(item => item.nunitId === selectedItem.n_ID);
-
-  //   if (selectedItem.v_UNIT_ALLOTTED_STATUS === 'yes' && !isAlreadyProcessed && !allotteeExists) {
-  //     const newDataForTable2: SaleDeed = {
-  //       nid: 0,
-  //       nschemeId: selectedItem.n_SCHEME_ID,
-  //       nunitId: selectedItem.n_ID,
-  //       sno: 0,
-  //       nallotteeId: 0,
-  //       loanFilePath: '',
-  //       lcsfilePath: '',
-  //       lcsfileName: '',
-  //       loanFileName: '',
-  //       saleDeedFile: '',
-  //       loanFile: '',
-  //       lcsfile: '',
-  //       fieldBookFile: '',
-  //       allotmentOrderFile: '',
-  //       allotmentOrderFileName: '',
-  //       allotmentOrderFilePath: '',
-  //       handingReportFileName: '',
-  //       fieldBookFileName: '',
-  //       handingReportFile: '',
-  //       fieldBookFilePath: '',
-  //       saleDeedFileName: '',
-  //       handingReportFilePath: '',
-  //       saleDeedFilePath: ''
-  //     };
-
-  //     this.saleDeedDataSource.data.push(newDataForTable2);
-  //     this.saleDeedDataSource.data = [...this.saleDeedDataSource.data];
-
-  //     this.processedUnitIDs.add(selectedItem.n_ID);
-  //   }
-  // }
-  private selectedNunitId!: number;
-  private selectedNallotteeId!: number;
-  getInitialSalesData(schemeId: number) {
-    this.http.getAllAllottees(schemeId).subscribe((response: any) => {
-      const data = response.data;
-      const fetchedAllotteeData: SaleDeed[] = data.map((item: SaleDeed, index: number) => {
-        this.selectedNunitId = item.nunitId;
-        this.selectedNallotteeId = item.nid;
-        return {
-          sno: index + 1,
-          nid: item.nid,
-          nschemeId: item.nschemeId,
-          nunitId: this.selectedNunitId,
-          nallotteeId: this.selectedNallotteeId,
-          loanFilePath: '',
-          lcsfilePath: '',
-          lcsfileName: '',
-          loanFileName: '',
-          saleDeedFile: '',
-          loanFile: '',
-          lcsfile: '',
-          fieldBookFile: '',
-          allotmentOrderFile: '',
-          allotmentOrderFileName: '',
-          allotmentOrderFilePath: '',
-          handingReportFileName: '',
-          fieldBookFileName: '',
-          handingReportFile: '',
-          fieldBookFilePath: '',
-          saleDeedFileName: '',
-          handingReportFilePath: '',
-          saleDeedFilePath: '',
-        };
-      });
-
-      this.saleDeedDataSource = new MatTableDataSource<SaleDeed>(fetchedAllotteeData);
-      console.log("saleDeedDataSource:", this.saleDeedDataSource);
+      if (isAllotted && !isProcessed) {
+        this.checkSalesData(n_ID, n_SCHEME_ID);
+        this.processedUnitIDsForSales.add(n_ID);
+      }
     });
+  }
+
+  checkSalesData(n_ID: number, n_SCHEME_ID: number) {
+    let isSalesDataExists = false;
+
+    for (const item of this.saleDeedDataSource.data) {
+      if (item.nunitId === n_ID) {
+        isSalesDataExists = true;
+        break;
+      }
+    }
+
+    if (isSalesDataExists) {
+      console.log('Sales data already exists for unit:', n_ID);
+    } else {
+      console.log('Sales data does not exist for unit:', n_ID);
+      this.handleYesForSales(n_ID, n_SCHEME_ID);
+    }
+  }
+
+  private selectedUnitId!: number
+  handleYesForSales(n_ID: number, n_SCHEME_ID: number,) {
+    const selectedItem = this.unitMasterDataSource.data.find(item => item.n_ID === n_ID && item.n_SCHEME_ID === n_SCHEME_ID);
+
+    if (!selectedItem) {
+      return;
+    }
+
+    const isAlreadyProcessed = this.processedUnitIDsForSales.has(selectedItem.n_ID);
+    const allotteeExists = this.saleDeedDataSource.data.some(item => item.nunitId === selectedItem.n_ID);
+
+    if (selectedItem.v_UNIT_ALLOTTED_STATUS === 'yes' && !isAlreadyProcessed && !allotteeExists) {
+      this.selectedUnitId = selectedItem.n_ID;
+      const newDataForTable2: SaleDeed = {
+        nid: 0,
+        nschemeId: selectedItem.n_SCHEME_ID,
+        nunitId: selectedItem.n_ID,
+        sno: 0,
+        nallotteeId: 0,
+        loanFilePath: '',
+        lcsfilePath: '',
+        lcsfileName: '',
+        loanFileName: '',
+        saleDeedFile: '',
+        loanFile: '',
+        lcsfile: '',
+        fieldBookFile: '',
+        allotmentOrderFile: '',
+        allotmentOrderFileName: '',
+        allotmentOrderFilePath: '',
+        handingReportFileName: '',
+        fieldBookFileName: '',
+        handingReportFile: '',
+        fieldBookFilePath: '',
+        saleDeedFileName: '',
+        handingReportFilePath: '',
+        saleDeedFilePath: ''
+      };
+
+      this.saleDeedDataSource.data.push(newDataForTable2);
+      this.saleDeedDataSource.data = [...this.saleDeedDataSource.data];
+
+      this.processedUnitIDsForSales.add(selectedItem.n_ID);
+    }
   }
 
   selectedAllotmentFile!: File;
@@ -972,11 +1003,8 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
         saleDeedFile: this.removeDataPrefix(base64SaleDeed),
         saleDeedFileName: this.selectedSaleDeedFile.name,
         nschemeId: this.schemeId,
-        nunitId: this.selectedNunitId,
-        nallotteeId: this.selectedNallotteeId
+        nunitId: this.selectedUnitId,
       };
-
-      console.log(this.schemeId, this.nUnitId, this.nAllotteeId);
 
       await this.uploadSaleDeed([saleDeedFiles]);
       this.loader.stop();
@@ -1045,93 +1073,104 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(async result => {
       if (result === true) {
         this.loader.start();
+        const promises: Promise<string>[] = [];
 
-        const base64Promises = [
-          this.readFileAsBase64(this.selectedAllotmentFile),
-          this.readFileAsBase64(this.selectedLCSFile),
-          this.readFileAsBase64(this.selectedHandingOverFile),
-          this.readFileAsBase64(this.selectedFieldFile),
-          this.readFileAsBase64(this.selectedABFile),
-          this.readFileAsBase64(this.selectedSaleDeedFile)
-        ];
-
-        try {
-          const [
-            base64Allotment,
-            base64LCS,
-            base64HandingOver,
-            base64Field,
-            base64AB,
-            base64SaleDeed
-          ] = await Promise.all(base64Promises);
-
-          const updatedSaleDeedFiles: SaleDeed[] = this.saleDeedDataSource.data.map(item => ({
-            allotmentOrderFile: this.removeDataPrefix(base64Allotment),
-            allotmentOrderFileName: this.selectedAllotmentFile.name,
-            lcsfile: this.removeDataPrefix(base64LCS),
-            lcsfileName: this.selectedLCSFile.name,
-            handingReportFile: this.removeDataPrefix(base64HandingOver),
-            handingReportFileName: this.selectedHandingOverFile.name,
-            fieldBookFile: this.removeDataPrefix(base64Field),
-            fieldBookFileName: this.selectedFieldFile.name,
-            loanFile: this.removeDataPrefix(base64AB),
-            loanFileName: this.selectedABFile.name,
-            saleDeedFile: this.removeDataPrefix(base64SaleDeed),
-            saleDeedFileName: this.selectedSaleDeedFile.name,
-            allotmentOrderFilePath: '',
-            lcsfilePath: '',
-            handingReportFilePath: '',
-            fieldBookFilePath: '',
-            loanFilePath: '',
-            saleDeedFilePath: '',
-            sno: 0,
-            nid: item.nid,
-            nschemeId: this.schemeId,
-            nunitId: this.selectedNunitId,
-            nallotteeId: this.selectedNallotteeId
-          }));
-
-          this.http.updateSaleDeedFiles(updatedSaleDeedFiles).subscribe(
-            response => {
-              this.loader.stop();
-              this.dialog.open(DialogMsgComponent, {
-                data: {
-                  isSuccess: true,
-                  message: 'Sales files updated successfully',
-                }
-              }).afterClosed().subscribe(() => {
-                window.location.reload();
-              });
-              console.log('Update successful:', response);
-            },
-            error => {
-              this.loader.stop();
-              this.dialog.open(DialogMsgComponent, {
-                data: {
-                  isSuccess: false,
-                  message: 'Error in  updating Sales Files',
-                }
-              }).afterClosed().subscribe(() => {
-                window.location.reload();
-              });
-              console.error('Update failed:', error);
-            }
-          );
-        } catch (error) {
-          this.loader.stop();
-          this.dialog.open(DialogMsgComponent, {
-            data: {
-              isSuccess: false,
-              message: 'Error in  updating Sales Files',
-            }
-          }).afterClosed().subscribe(() => {
-            window.location.reload();
-          });
-          console.error('Update failed:', error);
+        if (this.selectedAllotmentFile) {
+          promises.push(this.readFileAsBase64(this.selectedAllotmentFile));
         }
+
+        if (this.selectedLCSFile) {
+          promises.push(this.readFileAsBase64(this.selectedLCSFile));
+        }
+
+        if (this.selectedHandingOverFile) {
+          promises.push(this.readFileAsBase64(this.selectedHandingOverFile));
+        }
+
+        if (this.selectedFieldFile) {
+          promises.push(this.readFileAsBase64(this.selectedFieldFile));
+        }
+
+        if (this.selectedABFile) {
+          promises.push(this.readFileAsBase64(this.selectedABFile));
+        }
+
+        if (this.selectedSaleDeedFile) {
+          promises.push(this.readFileAsBase64(this.selectedSaleDeedFile));
+        }
+
+        const [base64Allotment, base64LCS, base64HandingOver, base64Field, base64AB, base64SaleDeed] = await Promise.all(promises);
+
+        const updatedSalesDeedData: SaleDeed[] = this.saleDeedDataSource.data.map(item => {
+          const updatedItem: SaleDeed = { ...item }; // Create a copy of the current item
+
+          if (this.selectedAllotmentFile) {
+            updatedItem.allotmentOrderFile = this.removeDataPrefix(base64Allotment);
+            updatedItem.allotmentOrderFileName = this.selectedAllotmentFile.name;
+          }
+
+          if (this.selectedLCSFile) {
+            updatedItem.lcsfile = this.removeDataPrefix(base64LCS);
+            updatedItem.lcsfileName = this.selectedLCSFile.name;
+          }
+
+          if (this.selectedHandingOverFile) {
+            updatedItem.handingReportFile = this.removeDataPrefix(base64HandingOver);
+            updatedItem.handingReportFileName = this.selectedHandingOverFile.name;
+          }
+
+          if (this.selectedFieldFile) {
+            updatedItem.fieldBookFile = this.removeDataPrefix(base64Field);
+            updatedItem.fieldBookFileName = this.selectedFieldFile.name;
+          }
+
+          if (this.selectedABFile) {
+            updatedItem.loanFile = this.removeDataPrefix(base64AB);
+            updatedItem.loanFileName = this.selectedABFile.name;
+          }
+
+          if (this.selectedSaleDeedFile) {
+            updatedItem.saleDeedFile = this.removeDataPrefix(base64SaleDeed);
+            updatedItem.saleDeedFileName = this.selectedSaleDeedFile.name;
+          }
+
+          return updatedItem;
+        });
+
+        console.log("updatedSalesDeedData:", updatedSalesDeedData);
+
+        this.http.updateSaleDeedFiles(updatedSalesDeedData).subscribe(
+          response => {
+            this.loader.stop();
+            this.dialog.open(DialogMsgComponent, {
+              data: {
+                isSuccess: true,
+                message: 'Sales files updated successfully',
+              }
+            }).afterClosed().subscribe(() => {
+              window.location.reload();
+            });
+            console.log('Update successful:', response);
+          },
+          error => {
+            this.loader.stop();
+            this.dialog.open(DialogMsgComponent, {
+              data: {
+                isSuccess: false,
+                message: 'Error in  updating Sales Files',
+              }
+            }).afterClosed().subscribe(() => {
+              window.location.reload();
+            });
+            console.error('Update failed:', error);
+          }
+        );
       }
     });
   }
+
+  //Finance Tab
+
 
 }
 

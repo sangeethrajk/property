@@ -1,0 +1,13 @@
+.main-content {
+    padding: 2rem;
+}
+
+.sub-heading {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #470A3C;
+}
+
+input[type="number"]::-webkit-inner-spin-button {
+    display: none;
+}

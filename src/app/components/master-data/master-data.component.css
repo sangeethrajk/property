@@ -1,3 +1,11 @@
+input[type="number"]::-webkit-inner-spin-button {
+    display: none;
+}
+
+/* input[type="number"] {
+    -moz-appearance: textfield;
+} */
+
 .main-content {
     padding: 2rem;
 }
@@ -100,14 +108,31 @@ input {
 
 .table-container {
     overflow-x: auto;
-    /* Enable horizontal scrolling */
     max-width: 100%;
-    /* Ensure the container respects available width */
 }
 
 .table-container th {
     background-color: #470A3C;
     color: #ffffff;
+}
+
+/* Allottee Tab */
+.allottee-table .mat-column-emailid,
+.allottee-table .mat-column-n_PHONE_NUMBER,
+.allottee-table .mat-column-v_ALLOTTEE_NAME,
+.allottee-table .mat-column-v_FATHER_SPOUSE_NAME,
+.allottee-table .mat-column-d_ALLOTTEE_DATE {
+    min-width: 7rem;
+}
+
+.allottee-table .mat-column-n_AADHAAR_NO {
+    min-width: 8rem;
+}
+
+.allottee-table .mat-column-v_AADHAAR_DOC_PDF,
+.allottee-table .mat-column-v_OTHER_DOC_PDF,
+.allottee-table .mat-column-v_ALLOTTEE_PHOTO {
+    min-width: 13rem;
 }
 
 
