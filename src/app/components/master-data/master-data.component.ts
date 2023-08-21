@@ -34,7 +34,7 @@ export interface UnitData {
 }
 
 export interface AllotteeData {
-  nid: number;
+  nid: number | null;
   nschemeId: number;
   nunitId: number;
   v_ALLOTTEE_NO: string;
@@ -578,7 +578,7 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
 
     if (selectedItem.v_UNIT_ALLOTTED_STATUS === 'yes' && !isAlreadyProcessed && !allotteeExists) {
       const newDataForTable2: AllotteeData = {
-        nid: 0,
+        nid: null,
         nschemeId: selectedItem.n_SCHEME_ID,
         nunitId: selectedItem.n_ID,
         v_ALLOTTEE_NO: '',
