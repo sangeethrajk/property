@@ -9,6 +9,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { DialogMsgComponent } from '../dialog-msg/dialog-msg.component';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 export interface UnitData {
   sno: number;
@@ -88,26 +89,16 @@ export interface SaleDeed {
 
 export interface FinanceData {
   sno: number;
-  V_SCHEME_ID: string;
-  V_UNIT_ID: string;
-  V_UNIT_SELLING_COST: number;
-  V_TENTATIVE_LAND_COST: number;
-  V_FINAL_LAND_COST: number;
-  V_ALLOTTMENT_DATE: string;
-  V_FIRM_COST: number;
-  N_FREEZED_RATE: number;
-  N_INITIAL_DEPOSIT: number;
-  N_MONTHLY_INSTALLMENT: number;
-  V_DIFFERENCE_IN_SELLING_COST_LEFT_OUT_IF_ANY: number;
-  V_INTEREST_ON_LEFT_OUT_FROM_THE_READY_FOR_OCCUPATION: number;
-  V_DIFFERENCE_IN_LAND_COST_AS_ON_ALLOTTMENT: number;
-  V_INTEREST_ON_DIFFERENCE_IN_LANDCOST: number;
-  V_RATE_OF_INTEREST: number;
-  V_PAYMENT_PERIOD_IN_YEARS: number;
-  V_INTEREST_ON_PRINCIPAL_AMOUNT: number;
-  V_PRINCIPAL_AMOUNT: number;
-  V_EMI_DUE_DATE: string;
-  V_ID_DUE_DATE: string;
+  nID: number | null;
+  v_SCHEME_ID: number;
+  n_UNIT_ID: number;
+  emi_START_DATE: string;
+  v_RATE_OF_INTEREST: number;
+  v_PAYMENT_PERIOD_IN_YEARS: number;
+  v_PRINCIPAL_AMOUNT: number;
+  n_INITIAL_DEPOSIT: number;
+  n_INITIAL_DEPOSIT_PAID: number;
+  N_INITIAL_DEPOSIT_TO_BE_PAID: number;
 }
 
 @Component({
@@ -178,26 +169,15 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
 
   financeTableColumns: string[] = [
     'sno',
-    'V_SCHEME_ID',
-    'V_UNIT_ID',
-    'V_UNIT_SELLING_COST',
-    'V_TENTATIVE_LAND_COST',
-    'V_FINAL_LAND_COST',
-    'V_ALLOTTMENT_DATE',
-    'V_FIRM_COST',
-    'N_FREEZED_RATE',
-    'N_INITIAL_DEPOSIT',
-    'N_MONTHLY_INSTALLMENT',
-    'V_DIFFERENCE_IN_SELLING_COST_LEFT_OUT_IF_ANY',
-    'V_INTEREST_ON_LEFT_OUT_FROM_THE_READY_FOR_OCCUPATION',
-    'V_DIFFERENCE_IN_LAND_COST_AS_ON_ALLOTTMENT',
-    'V_INTEREST_ON_DIFFERENCE_IN_LANDCOST',
-    'V_RATE_OF_INTEREST',
-    'V_PAYMENT_PERIOD_IN_YEARS',
-    'V_INTEREST_ON_PRINCIPAL_AMOUNT',
-    'V_PRINCIPAL_AMOUNT',
-    'V_EMI_DUE_DATE',
-    'V_ID_DUE_DATE',
+    'v_SCHEME_ID',
+    'n_UNIT_ID',
+    'emi_START_DATE',
+    'v_RATE_OF_INTEREST',
+    'v_PAYMENT_PERIOD_IN_YEARS',
+    'v_PRINCIPAL_AMOUNT',
+    'n_INITIAL_DEPOSIT',
+    'n_INITIAL_DEPOSIT_PAID',
+    'n_INITIAL_DEPOSIT_PAID',
     'action'
   ];
 
@@ -209,7 +189,12 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
     private http: HttpService,
     private loader: NgxUiLoaderService,
     private dialog: MatDialog,
-  ) { }
+    private fb: FormBuilder
+  ) {
+    this.rateOfInterestControl = this.fb.control('', [
+      Validators.pattern(/^\d+\.\d{1}$/)
+    ]);
+  }
 
   totalDevelopedUnits!: number;
   schemeId!: number;
@@ -228,13 +213,7 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
     this.getAllAllotteeData(this.schemeId);
     this.getInitialSalesData();
     this.getSalesDeedFiles(this.schemeId);
-    this.financeDataSource.data = this.data;
   }
-
-  data: FinanceData[] = [
-    { sno: 1, V_SCHEME_ID: 'A1', V_UNIT_ID: '101', V_UNIT_SELLING_COST: 100000, V_TENTATIVE_LAND_COST: 150000, V_FINAL_LAND_COST: 180000, V_ALLOTTMENT_DATE: '2023-08-15', V_FIRM_COST: 95000, N_FREEZED_RATE: 7, N_INITIAL_DEPOSIT: 20000, N_MONTHLY_INSTALLMENT: 5000, V_DIFFERENCE_IN_SELLING_COST_LEFT_OUT_IF_ANY: 5000, V_INTEREST_ON_LEFT_OUT_FROM_THE_READY_FOR_OCCUPATION: 600, V_DIFFERENCE_IN_LAND_COST_AS_ON_ALLOTTMENT: 3000, V_INTEREST_ON_DIFFERENCE_IN_LANDCOST: 450, V_RATE_OF_INTEREST: 8, V_PAYMENT_PERIOD_IN_YEARS: 5, V_INTEREST_ON_PRINCIPAL_AMOUNT: 700, V_PRINCIPAL_AMOUNT: 75000, V_EMI_DUE_DATE: '2023-09-01', V_ID_DUE_DATE: '2023-08-25' },
-    // Add more data objects as needed
-  ];
 
   populateInitialRows(schemeId: number) {
     this.http.getSchemeDataById(schemeId).subscribe(
@@ -485,6 +464,7 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.unitMasterDataSource.paginator = this.paginator;
+    window.dispatchEvent(new Event('resize'));
   }
 
   onUpdateUnitData() {
@@ -1170,6 +1150,101 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
   }
 
   //Finance Tab
+  processedUnitIDsForFinance = new Set<number>();
+  getInitialFinanceData() {
+    this.unitMasterDataSource.data.forEach(({ v_UNIT_ALLOTTED_STATUS, n_ID, n_SCHEME_ID }) => {
+      const isAllotted = v_UNIT_ALLOTTED_STATUS === 'yes';
+      const isProcessed = this.processedUnitIDsForFinance.has(n_ID);
+
+      if (isAllotted && !isProcessed) {
+        this.checkFinanceData(n_ID, n_SCHEME_ID);
+        this.processedUnitIDsForFinance.add(n_ID);
+      }
+    });
+  }
+
+  checkFinanceData(n_ID: number, n_SCHEME_ID: number) {
+    let isFinanceDataExists = false;
+
+    for (const item of this.financeDataSource.data) {
+      if (item.n_UNIT_ID === n_ID) {
+        isFinanceDataExists = true;
+        break;
+      }
+    }
+
+    if (isFinanceDataExists) {
+      console.log('Finance data already exists for unit:', n_ID);
+    } else {
+      console.log('Finance data does not exist for unit:', n_ID);
+      this.handleYesForFinance(n_ID, n_SCHEME_ID);
+    }
+  }
+
+  handleYesForFinance(n_ID: number, n_SCHEME_ID: number) {
+    const selectedItem = this.unitMasterDataSource.data.find(item => item.n_ID === n_ID && item.n_SCHEME_ID === n_SCHEME_ID);
+
+    if (!selectedItem) {
+      return;
+    }
+
+    const isAlreadyProcessed = this.processedUnitIDsForFinance.has(selectedItem.n_ID);
+    const allotteeExists = this.financeDataSource.data.some(item => item.n_UNIT_ID === selectedItem.n_ID);
+
+    if (selectedItem.v_UNIT_ALLOTTED_STATUS === 'yes' && !isAlreadyProcessed && !allotteeExists) {
+      this.selectedUnitId = selectedItem.n_ID;
+      const emptyRowForFinance: FinanceData = {
+        sno: 0,
+        nID: null,
+        v_SCHEME_ID: selectedItem.n_SCHEME_ID,
+        n_UNIT_ID: selectedItem.n_ID,
+        emi_START_DATE: '',
+        v_RATE_OF_INTEREST: 0,
+        v_PAYMENT_PERIOD_IN_YEARS: 0,
+        v_PRINCIPAL_AMOUNT: 0,
+        n_INITIAL_DEPOSIT: 0,
+        n_INITIAL_DEPOSIT_PAID: 0,
+        N_INITIAL_DEPOSIT_TO_BE_PAID: 0
+      };
+
+      this.financeDataSource.data.push(emptyRowForFinance);
+      this.financeDataSource.data = [...this.financeDataSource.data];
+      this.processedUnitIDsForFinance.add(selectedItem.n_ID);
+      console.log("financeDataSource:", this.financeDataSource);
+    }
+  }
+
+  startFinanceEdit(element: any) {
+    element.editing = true;
+  }
+
+  cancelFinanceEdit(element: any) {
+    element.editing = false;
+  }
+
+  rateOfInterestControl: FormControl;
+
+  updateFinanceData() {
+    const updatedElements: FinanceData[] = []; // Create an array to hold the updated elements
+
+    this.financeDataSource.data.forEach(element => {
+      const N_INITIAL_DEPOSIT_TO_BE_PAID = element.n_INITIAL_DEPOSIT - element.n_INITIAL_DEPOSIT_PAID;
+      element.N_INITIAL_DEPOSIT_TO_BE_PAID = N_INITIAL_DEPOSIT_TO_BE_PAID;
+
+      // Push the updated element into the array
+      updatedElements.push(element);
+    });
+
+    console.log(updatedElements);
+    this.http.updateFinanceData(updatedElements).subscribe(
+      (response) => {
+        console.log("updateFinanceData:", response);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
 
 
 }

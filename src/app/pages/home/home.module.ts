@@ -14,12 +14,12 @@ import { DialogMsgComponent } from 'src/app/components/dialog-msg/dialog-msg.com
 import { FinanceDetailsComponent } from 'src/app/components/finance-details/finance-details.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
-    text: "Loading...",
-    textColor: "#470A3C",
+    // text: "Loading...",
+    // textColor: "#470A3C",
     textPosition: "center-center",
     bgsColor: "#ffffff",
-    fgsColor: "#470A3C",
-    fgsType: SPINNER.squareJellyBox,
+    fgsColor: "#ffffff",
+    fgsType: SPINNER.circle,
     fgsSize: 100,
 };
 

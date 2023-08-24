@@ -85,4 +85,9 @@ export class HttpService {
     return this.http.post<any[]>(this.apiUrl + 'saveSalesDeed', updatedsaleDeedFiles, { headers });
   }
 
+  updateFinanceData(updatedFinanceData: any[]): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any[]>(this.apiUrl + 'emirows', updatedFinanceData, { headers });
+  }
+
 }

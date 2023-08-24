@@ -17,12 +17,12 @@ import { LoginComponent } from './pages/login/login.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
-  text: "Loading...",
-  textColor: "#470A3C",
+  // text: "Loading...",
+  // textColor: "#470A3C",
   textPosition: "center-center",
   bgsColor: "#ffffff",
-  fgsColor: "#470A3C",
-  fgsType: SPINNER.squareJellyBox,
+  fgsColor: "#ffffff",
+  fgsType: SPINNER.circle,
   fgsSize: 100,
 };
 

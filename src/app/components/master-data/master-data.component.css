@@ -107,7 +107,7 @@ input {
 }
 
 .table-container {
-    overflow-x: auto;
+    overflow-x: scroll;
     max-width: 100%;
 }
 
@@ -140,3 +140,17 @@ input {
 
 
 /* Sale Deed Tab - End */
+
+/* Finance Tab */
+.finance-table .mat-column-sno,
+.finance-table .mat-column-v_SCHEME_ID,
+.finance-table .mat-column-n_UNIT_ID,
+.finance-table .mat-column-emi_START_DATE,
+.finance-table .mat-column-v_RATE_OF_INTEREST,
+.finance-table .mat-column-v_PRINCIPAL_AMOUNT,
+.finance-table .mat-column-v_PAYMENT_PERIOD_IN_YEARS,
+.finance-table .mat-column-n_INITIAL_DEPOSIT,
+.finance-table .mat-column-n_INITIAL_DEPOSIT_PAID,
+.finance-table .mat-column-action {
+    border: 1px solid grey;
+}
