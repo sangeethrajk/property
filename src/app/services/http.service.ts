@@ -14,6 +14,10 @@ export class HttpService {
 
   constructor(private http: HttpClient) { }
 
+  getAllDivisions(): Observable<string[]> {
+    return this.http.post<string[]>(this.apiUrl + 'getAllDivision', {});
+  }
+
   getAllSchemesData(id: number): Observable<any> {
     const url = `${this.apiUrl}getAllSchemes`;
     const requestBody = { id: id };
@@ -80,14 +84,14 @@ export class HttpService {
     return this.http.post<any[]>(this.apiUrl + 'getAllSalesDeed', requestBody, { headers });
   }
 
-  updateSaleDeedFiles(updatedsaleDeedFiles: any[]): Observable<any> {
+  updateSaleDeedFiles(updatedsaleDeedFiles: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<any[]>(this.apiUrl + 'saveSalesDeed', updatedsaleDeedFiles, { headers });
   }
 
   updateFinanceData(updatedFinanceData: any[]): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any[]>(this.apiUrl + 'emirows', updatedFinanceData, { headers });
+    return this.http.post<any[]>(this.apiUrl + 'emirows', updatedFinanceData, { headers, responseType: 'text' as 'json' });
   }
 
 }

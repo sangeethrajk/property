@@ -22,14 +22,13 @@
     </div>
 
     <div>
-        <mat-tab-group>
+        <mat-tab-group (selectedTabChange)="handleInitialData($event)">
             <mat-tab label="Unit Data">
                 <ng-template matTabContent>
-                    <div>
+                    <div class="d-flex justify-content-end">
                         <button *ngIf="!dataFetched" class="btn button my-2" (click)="onCreateUnitMasterData()">Create
                             Unit Data</button>
-                        <button *ngIf="dataFetched" class="btn button my-2" (click)="onUpdateUnitData()">Update Unit
-                            Data</button>
+                        <button *ngIf="dataFetched" class="btn button my-2" (click)="onUpdateUnitData()">Update</button>
                     </div>
                     <div class="mat-elevation-z8 table-container">
                         <table mat-table [dataSource]="unitMasterDataSource" matSort>
@@ -97,9 +96,7 @@
             </mat-tab>
             <mat-tab label="Allotee">
                 <ng-template matTabContent>
-                    <div class="d-flex justify-content-between">
-                        <button class="btn button my-2" (click)="handleInitialAllotteeData()">Update from Unit</button>
-                        <!-- <button class="btn button my-2" (click)="sendAllotteeData()">Send</button> -->
+                    <div class="d-flex justify-content-end">
                         <button class="btn button my-2" (click)="updateAllotteeData()">Update</button>
                     </div>
                     <div class="mat-elevation-z8 table-container">
@@ -154,7 +151,7 @@
                                             </ng-container>
                                         </ng-container>
 
-                                        <ng-container *ngSwitchCase="'v_ALLOTTEE_PHOTO'">
+                                        <ng-container *ngSwitchCase="'v_ALLOTTEE_PHOTO'" stickyEnd>
                                             <ng-container *ngIf="!element.v_ALLOTTE_FILE_PATH">
                                                 <input type="file" [(ngModel)]="element[column.property]"
                                                     (change)="onAllotteePhotoSelected($event)"
@@ -185,8 +182,8 @@
             </mat-tab>
             <mat-tab label="Financial">
                 <ng-template matTabContent>
-                    <div class="d-flex justify-content-between">
-                        <button class="btn button my-2" (click)="getInitialFinanceData()">Update from Unit</button>
+                    <div class="d-flex justify-content-end">
+                        <!-- <button class="btn button my-2" (click)="getInitialFinanceData()">Update from Unit</button> -->
                         <button class="btn button my-2" (click)="updateFinanceData()">Update</button>
                     </div>
                     <div class="mat-elevation-z8 table-container">
@@ -231,13 +228,14 @@
                                         {{ element.v_RATE_OF_INTEREST }}
                                     </div>
                                     <ng-template #editingTemplate>
-                                        <input type="number" [ngModel]="element.v_RATE_OF_INTEREST"
-                                            (ngModelChange)="element.v_RATE_OF_INTEREST = $event"
-                                            [formControl]="rateOfInterestControl">
+                                        <input type="number" [(ngModel)]="element.v_RATE_OF_INTEREST"
+                                            [formControl]="financeForm.get('v_RATE_OF_INTEREST')">
                                         <div
-                                            *ngIf="rateOfInterestControl.invalid && (rateOfInterestControl.dirty || rateOfInterestControl.touched)">
-                                            <div *ngIf="rateOfInterestControl.hasError('pattern')">
-                                                Rate of interest should have one decimal point.</div>
+                                            *ngIf="financeForm.get('v_RATE_OF_INTEREST').invalid && financeForm.get('v_RATE_OF_INTEREST').touched">
+                                            <div *ngIf="financeForm.get('v_RATE_OF_INTEREST').hasError('required')">Rate
+                                                of interest is required.</div>
+                                            <div *ngIf="financeForm.get('v_RATE_OF_INTEREST').hasError('pattern')">Rate
+                                                of interest should have one decimal point.</div>
                                         </div>
                                     </ng-template>
                                 </td>
@@ -309,12 +307,18 @@
                                         </button>
                                         <button *ngIf="element.editing"
                                             class="btn btn-light p-1 rounded-circle d-flex align-items-center"
+                                            (click)="saveFinanceEdit(element)">
+                                            <span class="material-symbols-rounded">save</span>
+                                        </button>
+                                        <button *ngIf="element.editing"
+                                            class="btn btn-light p-1 rounded-circle d-flex align-items-center"
                                             (click)="cancelFinanceEdit(element)">
                                             <span class="material-symbols-rounded">
                                                 cancel
                                             </span>
                                         </button>
-                                        <button [routerLink]="['/property/home/finance',element.V_UNIT_ID ]"
+                                        <button *ngIf="!element.editing"
+                                            [routerLink]="['/property/home/finance',element.V_UNIT_ID ]"
                                             class="btn btn-light p-1 rounded-circle d-flex align-items-center">
                                             <span class="material-symbols-rounded">
                                                 visibility
@@ -336,8 +340,8 @@
             </mat-tab>
             <mat-tab label="Sale Deed">
                 <ng-template matTabContent>
-                    <div class="d-flex justify-content-between">
-                        <button class="btn button my-2" (click)="getInitialSalesData()">Update from Unit Data</button>
+                    <div class="d-flex justify-content-end">
+                        <!-- <button class="btn button my-2" (click)="getInitialSalesData()">Update from Unit Data</button> -->
                         <!-- <button class="btn button my-2" (click)="uploadSaleDeedFiles()">Upload</button> -->
                         <button class="btn button my-2" (click)="updateSaleDeedFiles()">Update</button>
                     </div>

@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { DialogMsgComponent } from '../dialog-msg/dialog-msg.component';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 export interface UnitData {
   sno: number;
@@ -69,20 +70,20 @@ export interface SaleDeed {
   nallotteeId: number;
   loanFilePath: string;
   lcsfilePath: string;
-  lcsfileName: string;
-  loanFileName: string;
-  saleDeedFile: string;
-  loanFile: string;
-  lcsfile: string;
-  fieldBookFile: string;
-  allotmentOrderFile: string;
-  allotmentOrderFileName: string;
+  lcsfileName: string | null;
+  loanFileName: string | null;
+  saleDeedFile: string | null;
+  loanFile: string | null;
+  lcsfile: string | null;
+  fieldBookFile: string | null;
+  allotmentOrderFile: string | null;
+  allotmentOrderFileName: string | null;
   allotmentOrderFilePath: string;
-  handingReportFileName: string;
-  fieldBookFileName: string;
-  handingReportFile: string;
+  handingReportFileName: string | null;
+  fieldBookFileName: string | null;
+  handingReportFile: string | null;
   fieldBookFilePath: string;
-  saleDeedFileName: string;
+  saleDeedFileName: string | null;
   handingReportFilePath: string;
   saleDeedFilePath: string;
 }
@@ -98,7 +99,7 @@ export interface FinanceData {
   v_PRINCIPAL_AMOUNT: number;
   n_INITIAL_DEPOSIT: number;
   n_INITIAL_DEPOSIT_PAID: number;
-  N_INITIAL_DEPOSIT_TO_BE_PAID: number;
+  n_INITIAL_DEPOSIT_TO_BE_PAID: number;
 }
 
 @Component({
@@ -118,6 +119,7 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
   allotteeDataSource: MatTableDataSource<AllotteeData> = new MatTableDataSource<AllotteeData>();
   saleDeedDataSource: MatTableDataSource<SaleDeed> = new MatTableDataSource<SaleDeed>();
   financeDataSource: MatTableDataSource<FinanceData> = new MatTableDataSource<FinanceData>();
+  financeForm: any;
   unitMasterTableColumns: any[] = [
     { prop: 'sno', display: 'S.No.' },
     { prop: 'n_SCHEME_ID', display: 'Scheme ID' },
@@ -158,6 +160,24 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
     { property: 'v_OTHER_DOC_PDF', display: 'Other Document PDF' },
     { property: 'v_ALLOTTEE_PHOTO', display: 'Allotte Photo' }
   ];
+  base64AllotmentFile!: string;
+  allotmentOrderFile!: any;
+  allotmentOrderFileName!: any;
+  base64LCSFile!: string;
+  lcsfile: any;
+  lcsfileName: any;
+  base64HandingOverFile!: string;
+  handingReportFile: any;
+  handingReportFileName: any;
+  base64FieldFile!: string;
+  fieldBookFile: any;
+  fieldBookFileName: any;
+  base64ABFile!: string;
+  loanFile: any;
+  loanFileName: any;
+  base64SaleDeedFile!: string;
+  saleDeedFile: any;
+  saleDeedFileName: any;
 
   get allotteeColumns(): string[] {
     return this.allotteeTableColumns.map(column => column.property);
@@ -177,7 +197,6 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
     'v_PRINCIPAL_AMOUNT',
     'n_INITIAL_DEPOSIT',
     'n_INITIAL_DEPOSIT_PAID',
-    'n_INITIAL_DEPOSIT_PAID',
     'action'
   ];
 
@@ -191,9 +210,30 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private fb: FormBuilder
   ) {
-    this.rateOfInterestControl = this.fb.control('', [
-      Validators.pattern(/^\d+\.\d{1}$/)
-    ]);
+    this.financeForm = this.fb.group({
+      v_RATE_OF_INTEREST: [null, [Validators.required, Validators.pattern(/^\d+(\.\d{1})?$/)]],
+      v_PAYMENT_PERIOD_IN_YEARS: [null, Validators.required],
+    });
+  }
+
+  handleInitialData(event: MatTabChangeEvent) {
+    const tab = event.tab.textLabel;
+    if (tab === "Allotee") {
+      this.unitMasterDataSource.data.forEach(({ v_UNIT_ALLOTTED_STATUS, n_ID, n_SCHEME_ID }) => {
+        const isAllotted = v_UNIT_ALLOTTED_STATUS === 'yes';
+        const isProcessed = this.processedUnitIDs.has(n_ID);
+
+        if (isAllotted && !isProcessed) {
+          this.checkAllotteeData(n_ID, n_SCHEME_ID);
+          this.processedUnitIDs.add(n_ID);
+        }
+      });
+    } else if (tab === "Financial") {
+      this.getInitialFinanceData();
+    } else if (tab === "Sale Deed") {
+      this.getInitialSalesData();
+    }
+
   }
 
   totalDevelopedUnits!: number;
@@ -516,17 +556,6 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
 
   //Allottee Tab
   processedUnitIDs = new Set<number>();
-  handleInitialAllotteeData() {
-    this.unitMasterDataSource.data.forEach(({ v_UNIT_ALLOTTED_STATUS, n_ID, n_SCHEME_ID }) => {
-      const isAllotted = v_UNIT_ALLOTTED_STATUS === 'yes';
-      const isProcessed = this.processedUnitIDs.has(n_ID);
-
-      if (isAllotted && !isProcessed) {
-        this.checkAllotteeData(n_ID, n_SCHEME_ID);
-        this.processedUnitIDs.add(n_ID);
-      }
-    });
-  }
 
   checkAllotteeData(n_ID: number, n_SCHEME_ID: number) {
     let isAllotteeDataExists = false;
@@ -603,32 +632,6 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
   }
   onAllotteePhotoSelected(event: any) {
     this.selectedAllotteePhoto = event.target.files[0];
-  }
-
-  async sendAllotteeData() {
-    // if (!this.selectedAadhaarFile || !this.selectedOtherFile || !this.selectedAllotteePhoto) {
-    //   console.log('One or more files are not selected.');
-    //   return;
-    // }
-
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '500px',
-      data: {
-        message: 'Are you sure you want to send the allottee data?',
-        confirmBackgroundColor: 'green',
-        cancelBackgroundColor: 'red',
-        confirmTextColor: 'white',
-        cancelTextColor: 'white',
-        confirmText: 'Yes',
-        cancelText: 'No'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === true) {
-        this.processAllotteeData(); // If user confirms, proceed with data processing
-      }
-    });
   }
 
   async processAllotteeData() {
@@ -866,7 +869,7 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private selectedUnitId!: number
+  private selectedUnitId!: number;
   handleYesForSales(n_ID: number, n_SCHEME_ID: number,) {
     const selectedItem = this.unitMasterDataSource.data.find(item => item.n_ID === n_ID && item.n_SCHEME_ID === n_SCHEME_ID);
 
@@ -1053,73 +1056,77 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(async result => {
       if (result === true) {
         this.loader.start();
-        const promises: Promise<string>[] = [];
 
         if (this.selectedAllotmentFile) {
-          promises.push(this.readFileAsBase64(this.selectedAllotmentFile));
+          this.base64AllotmentFile = await this.readFileAsBase64(this.selectedAllotmentFile);
+          this.allotmentOrderFile = this.removeDataPrefix(this.base64AllotmentFile);
+          this.allotmentOrderFileName = this.selectedAllotmentFile.name;
         }
 
         if (this.selectedLCSFile) {
-          promises.push(this.readFileAsBase64(this.selectedLCSFile));
+          this.base64LCSFile = await this.readFileAsBase64(this.selectedLCSFile);
+          this.lcsfile = this.removeDataPrefix(this.base64LCSFile);
+          this.lcsfileName = this.selectedLCSFile.name;
         }
 
         if (this.selectedHandingOverFile) {
-          promises.push(this.readFileAsBase64(this.selectedHandingOverFile));
+          this.base64HandingOverFile = await this.readFileAsBase64(this.selectedHandingOverFile);
+          this.handingReportFile = this.removeDataPrefix(this.base64HandingOverFile);
+          this.handingReportFileName = this.selectedHandingOverFile.name;
         }
 
         if (this.selectedFieldFile) {
-          promises.push(this.readFileAsBase64(this.selectedFieldFile));
+          this.base64FieldFile = await this.readFileAsBase64(this.selectedFieldFile);
+          this.fieldBookFile = this.removeDataPrefix(this.base64FieldFile);
+          this.fieldBookFileName = this.selectedFieldFile.name;
         }
 
         if (this.selectedABFile) {
-          promises.push(this.readFileAsBase64(this.selectedABFile));
+          this.base64ABFile = await this.readFileAsBase64(this.selectedABFile);
+          this.loanFile = this.removeDataPrefix(this.base64ABFile);
+          this.loanFileName = this.selectedABFile.name;
         }
 
         if (this.selectedSaleDeedFile) {
-          promises.push(this.readFileAsBase64(this.selectedSaleDeedFile));
+          this.base64SaleDeedFile = await this.readFileAsBase64(this.selectedSaleDeedFile);
+          this.saleDeedFile = this.removeDataPrefix(this.base64SaleDeedFile);
+          this.saleDeedFileName = this.selectedSaleDeedFile.name;
         }
 
-        const [base64Allotment, base64LCS, base64HandingOver, base64Field, base64AB, base64SaleDeed] = await Promise.all(promises);
+        const updatedSalesDeedData = {
+          allotmentOrderFile: this.allotmentOrderFile,
+          allotmentOrderFileName: this.allotmentOrderFileName,
+          lcsfile: this.lcsfile,
+          lcsfileName: this.lcsfileName,
+          handingReportFile: this.handingReportFile,
+          handingReportFileName: this.handingReportFileName,
+          fieldBookFile: this.fieldBookFile,
+          fieldBookFileName: this.fieldBookFileName,
+          loanFile: this.loanFile,
+          loanFileName: this.loanFileName,
+          saleDeedFile: this.saleDeedFile,
+          saleDeedFileName: this.saleDeedFileName
+        };
 
-        const updatedSalesDeedData: SaleDeed[] = this.saleDeedDataSource.data.map(item => {
-          const updatedItem: SaleDeed = { ...item }; // Create a copy of the current item
-
-          if (this.selectedAllotmentFile) {
-            updatedItem.allotmentOrderFile = this.removeDataPrefix(base64Allotment);
-            updatedItem.allotmentOrderFileName = this.selectedAllotmentFile.name;
-          }
-
-          if (this.selectedLCSFile) {
-            updatedItem.lcsfile = this.removeDataPrefix(base64LCS);
-            updatedItem.lcsfileName = this.selectedLCSFile.name;
-          }
-
-          if (this.selectedHandingOverFile) {
-            updatedItem.handingReportFile = this.removeDataPrefix(base64HandingOver);
-            updatedItem.handingReportFileName = this.selectedHandingOverFile.name;
-          }
-
-          if (this.selectedFieldFile) {
-            updatedItem.fieldBookFile = this.removeDataPrefix(base64Field);
-            updatedItem.fieldBookFileName = this.selectedFieldFile.name;
-          }
-
-          if (this.selectedABFile) {
-            updatedItem.loanFile = this.removeDataPrefix(base64AB);
-            updatedItem.loanFileName = this.selectedABFile.name;
-          }
-
-          if (this.selectedSaleDeedFile) {
-            updatedItem.saleDeedFile = this.removeDataPrefix(base64SaleDeed);
-            updatedItem.saleDeedFileName = this.selectedSaleDeedFile.name;
-          }
-
-          return updatedItem;
+        const tableData = this.saleDeedDataSource.data.map(row => {
+          return {
+            nid: row.nid,
+            nschemeId: row.nschemeId,
+            nunitId: row.nunitId,
+            nallotteeId: row.nallotteeId,
+            allotmentOrderFilePath: row.allotmentOrderFilePath,
+            lcsfilePath: row.lcsfilePath,
+            handingReportFilePath: row.handingReportFilePath,
+            fieldBookFilePath: row.fieldBookFilePath,
+            loanFilePath: row.loanFilePath,
+            saleDeedFilePath: row.saleDeedFilePath,
+            ...updatedSalesDeedData
+          };
         });
 
-        console.log("updatedSalesDeedData:", updatedSalesDeedData);
+        console.log("updatedSalesDeedData:", tableData);
 
-        this.http.updateSaleDeedFiles(updatedSalesDeedData).subscribe(
+        this.http.updateSaleDeedFiles(tableData).subscribe(
           response => {
             this.loader.stop();
             this.dialog.open(DialogMsgComponent, {
@@ -1149,7 +1156,30 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
     });
   }
 
+
+
   //Finance Tab
+
+  saveFinanceEdit(element: any) {
+    // Find the index of the row to update based on the input values
+    const index = this.financeDataSource.data.findIndex((item) =>
+      item.emi_START_DATE === element.emi_START_DATE &&
+      item.v_RATE_OF_INTEREST === element.v_RATE_OF_INTEREST &&
+      item.v_PAYMENT_PERIOD_IN_YEARS === element.v_PAYMENT_PERIOD_IN_YEARS &&
+      item.v_PRINCIPAL_AMOUNT === element.v_PRINCIPAL_AMOUNT &&
+      item.n_INITIAL_DEPOSIT === element.n_INITIAL_DEPOSIT &&
+      item.n_INITIAL_DEPOSIT_PAID === element.n_INITIAL_DEPOSIT_PAID
+    );
+
+    if (index !== -1) {
+      // Update the data in the data source
+      this.financeDataSource.data[index] = element;
+
+      // Exit the editing mode
+      element.editing = false;
+    }
+  }
+
   processedUnitIDsForFinance = new Set<number>();
   getInitialFinanceData() {
     this.unitMasterDataSource.data.forEach(({ v_UNIT_ALLOTTED_STATUS, n_ID, n_SCHEME_ID }) => {
@@ -1204,7 +1234,7 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
         v_PRINCIPAL_AMOUNT: 0,
         n_INITIAL_DEPOSIT: 0,
         n_INITIAL_DEPOSIT_PAID: 0,
-        N_INITIAL_DEPOSIT_TO_BE_PAID: 0
+        n_INITIAL_DEPOSIT_TO_BE_PAID: 0
       };
 
       this.financeDataSource.data.push(emptyRowForFinance);
@@ -1222,31 +1252,92 @@ export class MasterDataComponent implements OnInit, AfterViewInit {
     element.editing = false;
   }
 
-  rateOfInterestControl: FormControl;
 
   updateFinanceData() {
-    const updatedElements: FinanceData[] = []; // Create an array to hold the updated elements
-
-    this.financeDataSource.data.forEach(element => {
-      const N_INITIAL_DEPOSIT_TO_BE_PAID = element.n_INITIAL_DEPOSIT - element.n_INITIAL_DEPOSIT_PAID;
-      element.N_INITIAL_DEPOSIT_TO_BE_PAID = N_INITIAL_DEPOSIT_TO_BE_PAID;
-
-      // Push the updated element into the array
-      updatedElements.push(element);
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '500px',
+      data: {
+        message: 'Are you sure you want to update the finance data?',
+        confirmBackgroundColor: 'green',
+        cancelBackgroundColor: 'red',
+        confirmTextColor: 'white',
+        cancelTextColor: 'white',
+        confirmText: 'Yes',
+        cancelText: 'No'
+      }
     });
 
-    console.log(updatedElements);
-    this.http.updateFinanceData(updatedElements).subscribe(
-      (response) => {
-        console.log("updateFinanceData:", response);
-      },
-      (error) => {
-        console.error(error);
+    dialogRef.afterClosed().subscribe(async result => {
+      if (result === true) {
+        this.loader.start();
+        const updatedDataArray: any[] = [];
+
+        this.financeDataSource.data.forEach(element => {
+          const n_INITIAL_DEPOSIT_TO_BE_PAID = element.n_INITIAL_DEPOSIT - element.n_INITIAL_DEPOSIT_PAID;
+          element.n_INITIAL_DEPOSIT_TO_BE_PAID = n_INITIAL_DEPOSIT_TO_BE_PAID;
+          const updatedData = {
+            n_UNIT_ID: element.n_UNIT_ID,
+            v_RATE_OF_INTEREST: element.v_RATE_OF_INTEREST,
+            v_PRINCIPAL_AMOUNT: element.v_PRINCIPAL_AMOUNT,
+            v_PAYMENT_PERIOD_IN_YEARS: element.v_PAYMENT_PERIOD_IN_YEARS,
+            emi_START_DATE: element.emi_START_DATE,
+            n_INITIAL_DEPOSIT: element.n_INITIAL_DEPOSIT,
+            n_INITIAL_DEPOSIT_PAID: element.n_INITIAL_DEPOSIT_PAID,
+            n_INITIAL_DEPOSIT_TO_BE_PAID: n_INITIAL_DEPOSIT_TO_BE_PAID
+          };
+
+          updatedDataArray.push(updatedData);
+        });
+        console.log(updatedDataArray);
+        updatedDataArray.forEach(updatedData => {
+          this.http.updateFinanceData(updatedData).subscribe(
+            (response) => {
+              this.loader.stop();
+              this.dialog.open(DialogMsgComponent, {
+                data: {
+                  isSuccess: true,
+                  message: 'Finance Data updated successfully',
+                }
+              }).afterClosed().subscribe(() => {
+                window.location.reload();
+              });
+              console.log("updateFinanceData:", response);
+            },
+            (error) => {
+              this.loader.stop();
+              this.dialog.open(DialogMsgComponent, {
+                data: {
+                  isSuccess: false,
+                  message: 'Error in  updating Finance Data',
+                }
+              }).afterClosed().subscribe(() => {
+                window.location.reload();
+              });
+              console.error(error);
+            }
+          );
+        });
       }
-    );
+    });
   }
 
 
+  // populateSalesData(schemeId: number) {
+  //   this.http.getAllAllottees(schemeId).subscribe((nallotteeIds) => {
+  //     this.http.getSalesDeedFiles(schemeId).subscribe((saleDeedDetails) => {
+  //       // Loop through IDs and create or populate rows accordingly
+  //       nallotteeIds.forEach((id) => {
+  //         const existingDetail = saleDeedDetails.find((saleDeedDetails) => saleDeedDetails.nallotteeId === id);
+  //         if (existingDetail) {
+  //           this.saleDeedDataSource.data.push(existingDetail);
+  //         } else {
+  //           // Create an empty row if the ID doesn't exist in details
+  //           this.saleDeedDataSource.data.push({ nallotteeId: nallotteeId, nschemeId: nschemeId, nunitId: nschemeId });
+  //         }
+  //       });
+  //     });
+  //   });
+  // }
 }
 
 

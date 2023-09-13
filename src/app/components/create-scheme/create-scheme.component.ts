@@ -20,6 +20,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 })
 export class CreateSchemeComponent implements OnInit {
 
+  divisions: string[] = [];
   isLinear = false;
   schemeFormGroup!: FormGroup;
   unitFormGroup!: FormGroup;
@@ -140,6 +141,7 @@ export class CreateSchemeComponent implements OnInit {
       v_REMARKS: new FormControl(),
     });
 
+    this.loadDivisions();
   }
 
   validateCounts() {
@@ -263,10 +265,12 @@ export class CreateSchemeComponent implements OnInit {
       (response) => {
         this.loader.stop();
         this.openDialog(true, 'Scheme data deleted successfully!');
+        this.router.navigate(['/property/home/view-scheme']);
       },
       (error) => {
         this.loader.stop();
         this.openDialog(false, 'Error in deleting scheme data. Please try again later.');
+        this.router.navigate(['/property/home/view-scheme']);
       }
     );
   }
@@ -347,6 +351,16 @@ export class CreateSchemeComponent implements OnInit {
           n_TOTAL_UNSOLD_UNITS: data.n_TOTAL_UNSOLD_UNITS,
           v_REMARKS: data.v_REMARKS,
         });
+      });
+  }
+
+  loadDivisions(): void {
+    this.http.getAllDivisions()
+      .subscribe((response: any) => {
+        this.divisions = response.data;
+        console.log("divisions", this.divisions);
+      }, error => {
+        console.error('Failed to retrieve divisions:', error);
       });
   }
 

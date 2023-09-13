@@ -8,7 +8,11 @@
 
                 <mat-form-field>
                     <mat-label>Division:</mat-label>
-                    <input matInput type="text" formControlName="v_DIVISION" required>
+                    <mat-select formControlName="v_DIVISION" required>
+                        <mat-option *ngFor="let division of divisions" [value]="division">
+                            {{ division }}
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
